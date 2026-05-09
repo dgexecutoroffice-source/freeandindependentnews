@@ -763,7 +763,7 @@
     { n: "Chris Hedges", c: "Empire / Class War", o: "Pulitzer-winning former NYT war correspondent.", t: ["War & empire","Class war","Media critique","Christian fascism","Long-form interviews"], rss: "https://chrishedges.substack.com/feed" },
     { n: "The Grayzone", c: "Empire / Investigative", o: "Independent newsroom on empire and intelligence.", t: ["Regime-change wars","Empire critique","NGO networks","Sanctions journalism","Latin America"], rss: "https://thegrayzone.com/feed/" },
     { n: "Max Blumenthal", c: "Empire / Investigative", o: "Editor of The Grayzone; author and reporter.", t: ["Israel-Palestine","Proxy wars","Pentagon influence","Election analysis","Empire critique"], rss: "https://thegrayzone.com/feed/" },
-    { n: "Catherine Austin Fitts", c: "Finance / Policy / Investigative", o: "Publisher of The Solari Report; ex-Asst. Sec. of HUD.", t: ["Financial architecture","CBDCs","Pentagon ‘missing money’","Privacy & surveillance","Portfolio strategy"], rss: "https://catherineaustinfitts.substack.com/feed" },
+    { n: "Catherine Austin Fitts", c: "Finance / Policy / Investigative", o: "Publisher of The Solari Report; ex-Asst. Sec. of HUD.", t: ["Financial architecture","CBDCs","Pentagon ‘missing money’","Privacy & surveillance","Portfolio strategy"], rss: "https://solari.com/feed/" },
     { n: "The Irish Patriot", alt: "IrishPatri0t", c: "Ireland / Farmer Uprising", o: "Independent reporter on the farmer protests and government accountability in Ireland.", t: ["Farmer uprising","Government accountability","Ireland sovereignty","On-the-ground Ireland"], link: "https://x.com/IrishPatri0t", kind: "x-link" }
   ];
 
@@ -985,20 +985,33 @@
       .filter(l => bulletPrefix.test(l))
       .map(l => l.replace(bulletPrefix, '').trim())
       .filter(s => s.length >= 12 && s.length <= 240);
-    if (bulleted.length >= 3) return dedupeBullets(bulleted, max);
+    if (bulleted.length >= 2) return dedupeBullets(bulleted, max);
 
     // Pattern B: sentence split. Drop boilerplate footers (subscribe / patreon / share / get N% off).
     const flat = allLines.join(' ').replace(/\s+/g, ' ').trim();
     const stopRe = /\b(subscribe|patreon|share this|get \d+% off|read the full|click here|cross-posted|read on substack|follow on|appeared first on|listen to)/i;
     const sentences = flat.split(/(?<=[.!?])\s+(?=[A-Z(""'])/g)
       .map(s => s.trim())
-      .filter(s => s.length >= 25 && s.length <= 240)
+      .filter(s => s.length >= 18 && s.length <= 240)
       .filter(s => !stopRe.test(s));
-    if (sentences.length >= 3) return dedupeBullets(sentences, max);
+    if (sentences.length >= 2) return dedupeBullets(sentences, max);
 
-    // Pattern C: anything substantive — fallback short prose
-    const fallback = flat.length > 240 ? flat.slice(0, 240).replace(/[,;:\-\s]+\S*$/, '') + '…' : flat;
-    return fallback ? [fallback] : [];
+    // Pattern C: rescue short single-sentence descriptions by splitting on stronger punctuation
+    // (semicolons, em-dashes, colons-before-capital). This makes 1-sentence summaries bulletable.
+    if (flat.length > 60) {
+      const fragments = flat.split(/\s*(?:;|—| – | -- |(?<!\w):(?=\s+[A-Z]))\s*/)
+        .map(s => s.trim())
+        .filter(s => s.length >= 18 && s.length <= 240)
+        .filter(s => !stopRe.test(s));
+      if (fragments.length >= 2) return dedupeBullets(fragments, max);
+    }
+
+    // Pattern D: single substantive sentence — return it as one bullet so the visual stays consistent
+    if (flat && flat.length >= 18) {
+      const one = flat.length > 240 ? flat.slice(0, 240).replace(/[,;:\-\s]+\S*$/, '') + '…' : flat;
+      return [one];
+    }
+    return [];
   }
 
   function dedupeBullets(arr, max) {
@@ -1047,7 +1060,7 @@
     } else {
       const raw = item.excerpt || item.description || item.content || '';
       const bullets = extractArticleBullets(raw, 5);
-      if (bullets.length >= 3) {
+      if (bullets.length >= 1) {
         body = '<ul class="article-bullets">' + bullets.map(b => '<li>' + escapeHTML(b) + '</li>').join('') + '</ul>';
       } else {
         const excerpt = escapeHTML(stripExcerpt(raw));
