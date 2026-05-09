@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Free and Independent News — The Independent News Desk</title>
+<meta name="description" content="Free and Independent News. A dozen independent voices, curated. You pick your desk. A five-minute morning brief is coming soon." />
+<meta property="og:title" content="Free and Independent News — The Independent News Desk" />
+<meta property="og:description" content="A dozen independent voices. Your desk. No algorithm." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://freeandindependentnews.com" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="theme-color" content="#9b1c2c" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%239b1c2c'/%3E%3Ctext x='16' y='25' font-family='Georgia,serif' font-size='24' fill='%23faf8f2' text-anchor='middle' font-weight='900'%3EF%3C/text%3E%3Ccircle cx='25' cy='8' r='3' fill='%23c89b3c'/%3E%3C/svg%3E" />
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #faf8f2;
+    --rule: #d9d4c5;
+    --muted: #6b6152;
+    --oxblood: #9b1c2c;      /* primary brand red — Direction B */
+    --forest:  #1f3d2b;      /* INDEPENDENT green */
+    --gold:    #c89b3c;      /* ampersand + accent gold */
+    --accent: var(--oxblood);
+    --accent-soft: #f4ead4;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--ink); }
+  img { max-width: 100%; display: block; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 18px 22px; }
+  header.site {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 12px;
+    margin-bottom: 22px;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .mark {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .mark svg { display: block; height: 26px; width: auto; max-width: 100%; }
+  @media (max-width: 540px) { .mark svg { height: 22px; } }
+  header.site .masthead-meta {
+    flex: 1 1 280px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  header.site .dateline {
+    font-family: "Helvetica Neue", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    color: var(--oxblood);
+    white-space: nowrap;
+  }
+  header.site .tagline {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  @media (max-width: 720px) {
+    header.site .tagline { display: none; }
+  }
+  .nav { font-family: "Helvetica Neue", sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .nav a { margin-left: 16px; color: var(--ink); text-decoration: none; }
+  .nav a:hover { color: var(--accent); }
+  .nav-min a { color: var(--muted); }
+  .nav-min a:first-child { color: var(--oxblood); font-weight: 700; }
+
+  .ctas {
+    display: flex; flex-wrap: wrap; gap: 14px;
+  }
+  .btn {
+    display: inline-block;
+    padding: 14px 26px;
+    font-family: "Helvetica Neue", sans-serif;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    cursor: pointer;
+  }
+  .btn.primary { background: var(--ink); color: var(--paper); }
+  .btn.primary:hover { background: #000; }
+  .btn.secondary { background: transparent; color: var(--ink); }
+  .btn.secondary:hover { background: var(--accent-soft); }
+
+  section.how {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 36px;
+    margin-bottom: 56px;
+  }
+  @media (max-width: 760px) { section.how { grid-template-columns: 1fr; gap: 26px; } }
+
+  section.my-desk {
+    margin-bottom: 32px;
+  }
+  section.my-desk .desk-head {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 10px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 12px 18px;
+    flex-wrap: wrap;
+  }
+  section.my-desk .desk-head--news h2 {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(20px, 2.4vw, 24px);
+    margin: 0;
+    color: var(--ink);
+  }
+  section.my-desk .desk-head--news .lede {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  section.my-desk .desk-head--news .lede a {
+    margin-left: 10px;
+    font-weight: 700;
+  }
+  section.my-desk .desk-head .kicker {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--oxblood);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  section.my-desk h2 {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(28px, 4vw, 38px);
+    margin: 0 0 8px;
+    line-height: 1.15;
+  }
+  section.my-desk h2 em { font-style: italic; color: var(--oxblood); }
+  section.my-desk .lede {
+    color: var(--muted);
+    font-size: 16px;
+    margin: 0;
+  }
+  section.my-desk .lede a {
+    color: var(--oxblood);
+    text-decoration: none;
+    font-weight: 700;
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+  section.my-desk .lede a:hover { text-decoration: underline; }
+  ul.voice-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 22px;
+    row-gap: 0;
+  }
+  @media (max-width: 1080px) {
+    ul.voice-list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 18px; }
+  }
+  @media (max-width: 720px) {
+    ul.voice-list { grid-template-columns: 1fr; column-gap: 0; }
+  }
+  /* Dense news-feed cards: byline up top (small), headline (bold, big), excerpt (tight). */
+  ul.voice-list li.voice-item {
+    border-top: 1px solid var(--rule);
+    background: transparent;
+    padding: 10px 0 10px 12px;
+    border-left: 3px solid transparent;
+    display: block;
+    position: relative;
+    min-width: 0;
+  }
+  ul.voice-list li.voice-item.feature {
+    grid-column: 1 / -1;
+    background: var(--accent-soft);
+    border: 1px solid var(--oxblood);
+    border-left: 4px solid var(--oxblood);
+    padding: 14px 16px;
+    margin-bottom: 6px;
+  }
+  ul.voice-list li.voice-item .num { display: none; }   /* visual rank, not needed */
+  ul.voice-list li.voice-item .meta { display: none; }  /* drop category clutter */
+  /* Tiny byline-style voice name above the headline. */
+  ul.voice-list li.voice-item .name {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin: 0 0 5px;
+    color: var(--muted);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  ul.voice-list li.voice-item.feature .name {
+    font-size: 11px;
+    color: var(--oxblood);
+  }
+  ul.voice-list li.voice-item .name .when-badge {
+    font-family: "Helvetica Neue", sans-serif;
+    font-weight: 700;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--oxblood);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  ul.voice-list li.voice-item .name .when-badge.fresh::before {
+    content: "●";
+    color: var(--oxblood);
+    margin-right: 4px;
+    animation: livePulse 1.6s ease-in-out infinite;
+  }
+  /* Suppressed alt-handle row for non-featured cards (it's noise). */
+  ul.voice-list li.voice-item .alt-handle {
+    display: none;
+  }
+  ul.voice-list li.voice-item.feature .alt-handle {
+    display: block;
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--oxblood);
+    margin: 0 0 6px;
+  }
+  ul.voice-list li.voice-item .one {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--muted);
+    margin: 0 0 8px;
+  }
+  ul.voice-list li.voice-item:not(.feature) .one { display: none; }
+  ul.voice-list li.voice-item .topics {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 6px;
+  }
+  ul.voice-list li.voice-item .topics li {
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: rgba(155, 28, 44, 0.08);
+    border: 1px solid rgba(155, 28, 44, 0.20);
+    padding: 2px 7px 2.5px;
+    border-radius: 11px;
+    font-weight: 600;
+  }
+  ul.voice-list li.voice-item .latest {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    font-family: Georgia, serif;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  ul.voice-list li.voice-item.feature .latest {
+    background: rgba(255,255,255,0.55);
+    border-left: 3px solid var(--oxblood);
+    padding: 10px 12px;
+    margin-top: 4px;
+  }
+  /* Only the featured card shows the "LATEST · 8h" label row. Other cards put the time in the byline. */
+  ul.voice-list li.voice-item:not(.feature) .latest .latest-label { display: none; }
+  ul.voice-list li.voice-item .latest .latest-label {
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--oxblood);
+    font-weight: 700;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  ul.voice-list li.voice-item .latest .latest-label .when {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  ul.voice-list li.voice-item .latest .latest-title {
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 16px;
+    line-height: 1.2;
+    display: block;
+    margin-bottom: 4px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    font-family: Georgia, serif;
+  }
+  ul.voice-list li.voice-item.feature .latest .latest-title { font-size: 18px; }
+  ul.voice-list li.voice-item .latest .latest-title:hover {
+    color: var(--oxblood);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 2px;
+  }
+  ul.voice-list li.voice-item .latest .latest-excerpt {
+    color: #3a342a;
+    font-size: 12.5px;
+    line-height: 1.5;
+    margin: 4px 0 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  ul.voice-list li.voice-item.feature .latest .latest-excerpt {
+    -webkit-line-clamp: 8;
+    font-size: 13px;
+  }
+  ul.voice-list li.voice-item .latest .report-sub-label {
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+    margin: 8px 0 4px;
+  }
+  ul.voice-list li.voice-item .latest .report-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 4px;
+  }
+  ul.voice-list li.voice-item .latest .report-bullets li {
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: #2a2620;
+    padding-left: 14px;
+    position: relative;
+  }
+  ul.voice-list li.voice-item .latest .report-bullets li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--oxblood);
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  ul.voice-list li.voice-item .latest .report-bullets li:first-child {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  ul.voice-list li.voice-item .latest .report-bullets li:first-child::before {
+    content: "❚";
+    color: var(--oxblood);
+    font-size: 13px;
+    top: -1px;
+  }
+  ul.voice-list li.voice-item .latest.loading,
+  ul.voice-list li.voice-item .latest.errored {
+    color: var(--muted);
+    font-style: italic;
+    font-size: 12px;
+    border-left-color: var(--rule);
+    background: transparent;
+    padding-left: 14px;
+  }
+  ul.voice-list li.voice-item a.latest.x-link {
+    display: block;
+    text-decoration: none;
+    color: var(--ink);
+    transition: background 0.15s;
+  }
+  ul.voice-list li.voice-item a.latest.x-link:hover {
+    background: rgba(155, 28, 44, 0.10);
+  }
+  ul.voice-list li.voice-item a.latest.x-link .x-link-cta {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  ul.voice-list li.voice-item a.latest.x-link .x-link-cta strong {
+    color: var(--oxblood);
+  }
+  ul.voice-list li.voice-item .latest.breaking {
+    border-left-color: var(--oxblood);
+    border-left-width: 5px;
+    background: #f7d9d9;
+    box-shadow: 0 0 0 1px rgba(155, 28, 44, 0.18);
+    animation: pulseBreak 2.4s ease-in-out 2;
+  }
+  ul.voice-list li.voice-item .latest .breaking-tag {
+    display: inline-block;
+    background: var(--oxblood);
+    color: var(--paper);
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    padding: 3px 8px 2px;
+    margin-right: 8px;
+    border-radius: 2px;
+    vertical-align: 2px;
+  }
+  @keyframes pulseBreak {
+    0%   { box-shadow: 0 0 0 1px rgba(155, 28, 44, 0.18); }
+    50%  { box-shadow: 0 0 0 5px rgba(155, 28, 44, 0.10); }
+    100% { box-shadow: 0 0 0 1px rgba(155, 28, 44, 0.18); }
+  }
+  .feed-status {
+    text-align: right;
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 8px;
+    min-height: 14px;
+  }
+  .feed-status.live {
+    color: var(--oxblood);
+    font-weight: 700;
+  }
+  .feed-status .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--oxblood);
+    margin-right: 6px;
+    vertical-align: 1px;
+    animation: livePulse 1.6s ease-in-out infinite;
+  }
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.35; }
+  }
+  .desk-foot {
+    margin-top: 18px;
+    text-align: right;
+  }
+  .desk-foot a {
+    font-family: "Helvetica Neue", sans-serif;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    color: var(--oxblood);
+    text-decoration: none;
+  }
+  .desk-foot a:hover { text-decoration: underline; }
+  .how .step .num {
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .how .step h3 {
+    font-family: Georgia, serif;
+    font-weight: 600;
+    font-size: 22px;
+    margin: 0 0 10px;
+  }
+  .how .step p { color: #3f3a30; font-size: 16px; margin: 0; }
+
+  /* TODAY'S LEDE — single mega-headline strip above the grid. Click goes to the source. */
+  .lede-strip {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 14px;
+    padding: 10px 14px;
+    margin: 0 0 12px;
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+    border-left: 5px solid var(--oxblood);
+    transition: background 0.15s;
+  }
+  .lede-strip:hover { background: #000; }
+  .lede-strip[hidden] { display: none; }
+  .lede-strip .lede-kicker {
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+  .lede-strip .lede-headline {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    font-size: clamp(15px, 1.6vw, 19px);
+    line-height: 1.2;
+    color: var(--paper);
+  }
+  .lede-strip .lede-meta {
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(250, 248, 242, 0.6);
+    white-space: nowrap;
+  }
+  @media (max-width: 720px) {
+    .lede-strip {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+    .lede-strip .lede-meta { text-align: right; }
+  }
+
+  /* Compact "Reserve the Brief" band — sits under the news, not above. */
+  section.brief-band {
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  section.brief-band .brief-band-copy {
+    flex: 1 1 320px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  section.brief-band .brief-band-kicker {
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--oxblood);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  section.brief-band .brief-band-text {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  section.why {
+    background: var(--accent-soft);
+    padding: 18px 22px;
+    margin-bottom: 28px;
+  }
+  section.why h2 {
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin: 0 0 6px;
+    color: var(--accent);
+  }
+  section.why p {
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 0;
+    max-width: 880px;
+    color: #2a2620;
+  }
+  section.why p a {
+    color: var(--oxblood);
+    text-decoration: none;
+    font-weight: 700;
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+  section.why p a:hover { text-decoration: underline; }
+  form.capture-form {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    flex: 0 1 auto;
+  }
+  form.capture-form input[type=email] {
+    flex: 1 1 220px;
+    padding: 9px 12px;
+    font-family: Georgia, serif;
+    font-size: 14px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  form.capture-form button {
+    flex: 0 0 auto;
+    padding: 9px 16px;
+    font-size: 11px;
+  }
+  .capture-status {
+    flex: 1 0 100%;
+    margin-top: 4px;
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 12px;
+    color: var(--accent);
+    min-height: 16px;
+  }
+
+  footer.site {
+    border-top: 1px solid var(--ink);
+    padding-top: 24px;
+    margin-top: 24px;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: "Helvetica Neue", sans-serif;
+  }
+  footer.site p { margin: 0 0 6px; max-width: 720px; line-height: 1.5; }
+  footer.site .copyright { margin-top: 18px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site masthead">
+    <a href="/" class="mark" aria-label="Free and Independent News">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 40" role="img" aria-hidden="true">
+        <text x="0"   y="32" font-family="'Bookman Old Style', 'Cooper Black', Georgia, 'Times New Roman', serif" font-weight="900" font-size="30" fill="#9b1c2c" textLength="86" lengthAdjust="spacingAndGlyphs">FREE</text>
+        <text x="98"  y="30" font-family="Georgia, serif" font-style="italic" font-weight="700" font-size="24" fill="#c89b3c">&amp;</text>
+        <text x="124" y="32" font-family="'Bookman Old Style', 'Cooper Black', Georgia, serif" font-weight="900" font-size="30" fill="#1f3d2b" textLength="250" lengthAdjust="spacingAndGlyphs">INDEPENDENT</text>
+        <text x="395" y="32" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="700" font-size="20" fill="#1a1a1a" letter-spacing="0.32em">NEWS</text>
+      </svg>
+    </a>
+    <div class="masthead-meta">
+      <span class="dateline" id="dateline"></span>
+    </div>
+    <nav class="nav nav-min">
+      <a href="/desk.html">Edit roster</a>
+      <a href="#reserve">Brief</a>
+    </nav>
+  </header>
+
+  <a id="lede-strip" class="lede-strip" href="#" target="_blank" rel="noopener noreferrer" hidden>
+    <span class="lede-kicker">Today's Lede</span>
+    <span class="lede-headline" id="lede-headline"></span>
+    <span class="lede-meta"><span id="lede-byline"></span> · <span id="lede-when"></span></span>
+  </a>
+
+  <section class="my-desk" id="my-desk" aria-label="Today on the desk">
+    <div class="feed-status" id="feed-status" aria-live="polite"></div>
+    <ul class="voice-list" id="voice-list"></ul>
+  </section>
+
+  <section class="brief-band" id="reserve" aria-label="Reserve the morning brief">
+    <div class="brief-band-copy">
+      <span class="brief-band-kicker">The Morning Brief</span>
+      <span class="brief-band-text">A five-minute Wire-style brief from the writers on your desk, emailed at 6&nbsp;a.m. Early founders first.</span>
+    </div>
+    <form class="capture-form" id="capture" onsubmit="return captureSubmit(event)">
+      <input type="email" name="email" placeholder="you@example.com" required autocomplete="email" />
+      <button type="submit" class="btn primary">Reserve →</button>
+    </form>
+    <div class="capture-status" id="capture-status" role="status" aria-live="polite"></div>
+  </section>
+
+  <section class="why" id="why" aria-label="Why this exists">
+    <h2>Why this exists</h2>
+    <p><b>Free and Independent News</b> is the desk where your chosen voices meet. No algorithm. No ads. No feed. Just the writers you already trust, the morning brief when it ships, and nothing in between. <a href="/desk.html">Edit your roster →</a></p>
+  </section>
+
+  <footer class="site">
+    <p>We don't sell ads, we don't sell data, and we don't choose which voices are on your desk. <b>Your desk, not an algorithm.</b></p>
+    <p class="copyright">© 2026 Free and Independent News · freeandindependentnews.com · <a href="#reserve">Reserve the Brief</a></p>
+  </footer>
+
+</div>
+
+<script>
+  // ============================================================
+  // Backend wiring — paste the Apps Script Web App URL here:
+  //   Deploy apps-script-Code.gs as a Web App, copy the "/exec"
+  //   URL it gives you, and paste it between the quotes below.
+  //   See backend-handoff.md for the full walkthrough.
+  // ============================================================
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzOmwFWtct-jpDdaJLKpY0biV8hle3D3xZqpfPx7wdweOb47b1PIKr-Ce6SfJH6qNokyg/exec';
+
+  // Feed agent — Cloudflare Worker that runs every 10 minutes and serves
+  // the consolidated latest-article JSON. Set after the Worker is deployed.
+  // Use empty string to fall back to per-voice rss2json (legacy path).
+  const FEED_AGENT_URL = 'https://feed-agent.dgexecutoroffice.workers.dev/api/latest';
+
+  // Voice roster — must mirror desk.html VOICES list. First-time visitors see
+  // all ten voices on their desk; returning visitors see whatever they saved.
+  const ALL_VOICES = [
+    { n: "The Underground", alt: "S2 Underground", c: "Daily Intel Brief", o: "Independent intelligence brief — “The Wire,” every day.", t: ["Daily intel brief","Global conflict tracking","Military movements","Geopolitical flashpoints","Strategic analysis"], rss: "https://feeds.buzzsprout.com/868255.rss", kind: "report", feature: true },
+    { n: "Glenn Greenwald", c: "Civil Liberties / Investigative", o: "Constitutional lawyer; founder of System Update.", t: ["Civil liberties","Surveillance state","Press freedom","US foreign policy","Censorship"], rss: "https://greenwald.substack.com/feed" },
+    { n: "Whitney Webb / Unlimited Hangout", c: "Intelligence / Investigative", o: "Investigative reporter on the intel-finance-tech nexus.", t: ["Intelligence networks","Financial crime","Epstein networks","Pandemic profiteering","Tech-state fusion"], rss: "https://unlimitedhangout.com/feed/" },
+    { n: "Aaron Maté", c: "Foreign Policy / Investigative", o: "Pushback host; OPCW Syria docs; Russiagate critic.", t: ["Russiagate aftermath","NATO / Ukraine","Israel-Palestine","OPCW Syria","Foreign policy"], rss: "https://mate.substack.com/feed" },
+    { n: "Michael Yon", c: "Frontline / Foreign Affairs", o: "Frontline correspondent at the world’s migration choke points.", t: ["Border crisis","Migration as warfare","Darién Gap","Frontline reporting","Strategic geography"], rss: "https://michaelyon.substack.com/feed" },
+    { n: "Consortium News", c: "Investigative / Foreign Policy", o: "Founded 1995 by Robert Parry. Empire, intelligence, war.", t: ["Empire & intel ops","Press freedom","War coverage","Latin America","CIA history"], rss: "https://consortiumnews.com/feed/" },
+    { n: "Chris Hedges", c: "Empire / Class War", o: "Pulitzer-winning former NYT war correspondent.", t: ["War & empire","Class war","Media critique","Christian fascism","Long-form interviews"], rss: "https://chrishedges.substack.com/feed" },
+    { n: "The Grayzone", c: "Empire / Investigative", o: "Independent newsroom on empire and intelligence.", t: ["Regime-change wars","Empire critique","NGO networks","Sanctions journalism","Latin America"], rss: "https://thegrayzone.com/feed/" },
+    { n: "Max Blumenthal", c: "Empire / Investigative", o: "Editor of The Grayzone; author and reporter.", t: ["Israel-Palestine","Proxy wars","Pentagon influence","Election analysis","Empire critique"], rss: "https://thegrayzone.com/feed/" },
+    { n: "Ana Kasparian", c: "Domestic Politics / Commentary", o: "TYT co-host; independent commentary on Unaltered Ego.", t: ["Domestic politics","Labor & economy","Democratic Party critique","Culture wars","California politics"], rss: "https://anakasparian.substack.com/feed" },
+    { n: "Catherine Austin Fitts", c: "Finance / Policy / Investigative", o: "Publisher of The Solari Report; ex-Asst. Sec. of HUD.", t: ["Financial architecture","CBDCs","Pentagon ‘missing money’","Privacy & surveillance","Portfolio strategy"], rss: "https://catherineaustinfitts.substack.com/feed" },
+    { n: "The Irish Patriot", alt: "IrishPatri0t", c: "Ireland / Farmer Uprising", o: "Independent reporter on the farmer protests and government accountability in Ireland.", t: ["Farmer uprising","Government accountability","Ireland sovereignty","On-the-ground Ireland"], link: "https://x.com/IrishPatri0t", kind: "x-link" }
+  ];
+
+  (function hydrateMyDesk() {
+    let names;
+    const raw = localStorage.getItem('desk_v1');
+    if (raw === null) {
+      names = ALL_VOICES.map(v => v.n);
+    } else {
+      try {
+        const parsed = JSON.parse(raw);
+        names = Array.isArray(parsed) ? parsed : ALL_VOICES.map(v => v.n);
+      } catch (_) { names = ALL_VOICES.map(v => v.n); }
+    }
+    // Migration: auto-add any voice the user couldn't have known about (added since their last save).
+    // Keeps "The Underground" visible to returning visitors without forcing them through /desk again.
+    const known = new Set(names);
+    const newVoices = ALL_VOICES.filter(v => !known.has(v.n));
+    if (newVoices.length) {
+      // Prepend featured/report voices, append the rest.
+      const featuredFirst = newVoices.filter(v => v.feature || v.kind === 'report').map(v => v.n);
+      const others = newVoices.filter(v => !v.feature && v.kind !== 'report').map(v => v.n);
+      names = [...featuredFirst, ...names, ...others];
+      try { localStorage.setItem('desk_v1', JSON.stringify(names)); } catch (_) {}
+    }
+    const byName = Object.fromEntries(ALL_VOICES.map(v => [v.n, v]));
+    const list = document.getElementById('voice-list');
+    if (!names.length) {
+      // Empty-desk message rendered into the voice list itself since the desk-head was removed.
+      list.innerHTML = '<li style="padding:20px 0;font-family:Georgia,serif;color:var(--muted);grid-column:1/-1;">Your desk is empty. <a href="/desk.html" style="color:var(--oxblood);font-weight:700;">Build your desk &rarr;</a></li>';
+      return;
+    }
+
+    // Dateline in the masthead: "TUE · APR 30, 2026"
+    try {
+      const d = new Date();
+      const wkday = d.toLocaleDateString(undefined, { weekday: 'short' }).toUpperCase();
+      const dateStr = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
+      const dl = document.getElementById('dateline');
+      if (dl) dl.textContent = wkday + ' · ' + dateStr;
+    } catch (_) {}
+    list.innerHTML = names.map((nm, i) => {
+      const v = byName[nm];
+      if (!v) return '';
+      const num = String(i + 1).padStart(2, '0');
+      const isReport = v.kind === 'report';
+      const isXLink = v.kind === 'x-link';
+      let slot = '';
+      if (v.rss) {
+        slot = `<div class="latest loading" data-rss="${encodeURIComponent(v.rss)}" data-voice="${encodeURIComponent(v.n)}" data-kind="${isReport ? 'report' : 'article'}">${isReport ? 'Loading today&rsquo;s brief&hellip;' : 'Loading latest&hellip;'}</div>`;
+      } else if (isXLink && v.link) {
+        // No public RSS for X — render a static "Visit on X" tile that links straight to the profile.
+        const handle = (v.alt || '').replace(/\s+/g, '');
+        slot = `<a class="latest x-link" href="${v.link}" target="_blank" rel="noopener noreferrer">
+          <div class="latest-label"><span>Live updates</span><span class="when">on X</span></div>
+          <div class="x-link-cta">Open <strong>@${handle}</strong> on X &rarr;</div>
+        </a>`;
+      }
+      const cls = 'voice-item' + (v.feature ? ' feature' : '');
+      // Featured card keeps the alt-handle pill + the one-line description for context.
+      // All other cards drop both — byline + headline + excerpt only.
+      const altLine = v.alt ? `<div class="alt-handle">On X · @${v.alt.replace(/\s+/g,'')}</div>` : '';
+      const oneLine = v.feature ? `<p class="one">${v.o}</p>` : '';
+      return `<li class="${cls}" data-voice-key="${encodeURIComponent(v.n)}" data-pub="">
+        <h3 class="name">${v.n}<span class="when-badge"></span></h3>
+        ${altLine}
+        ${oneLine}
+        ${slot}
+      </li>`;
+    }).join('');
+    loadLatestArticles();
+  })();
+
+  function escapeHTML(s) {
+    return String(s || '').replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  function relativeDate(d) {
+    if (!d) return '';
+    const t = new Date(d);
+    if (isNaN(t.getTime())) return '';
+    const diffMs = Date.now() - t.getTime();
+    const day = 86400000;
+    const days = Math.floor(diffMs / day);
+    if (days < 1) {
+      const hrs = Math.floor(diffMs / 3600000);
+      if (hrs < 1) return 'just now';
+      return hrs + 'h ago';
+    }
+    if (days === 1) return 'yesterday';
+    if (days < 7) return days + ' days ago';
+    return t.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: t.getFullYear() === new Date().getFullYear() ? undefined : 'numeric' });
+  }
+
+  function stripExcerpt(html) {
+    if (!html) return '';
+    // strip tags, decode common entities, collapse whitespace
+    let txt = String(html).replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ');
+    const tmp = document.createElement('textarea');
+    tmp.innerHTML = txt;
+    txt = tmp.value;
+    txt = txt.replace(/\s+/g, ' ').trim();
+    // Give the visitor a real preview — let the CSS line-clamp decide what fits.
+    // Cap at ~700 chars so we ship enough text for 6 lines without bloating the DOM.
+    if (txt.length > 700) txt = txt.slice(0, 700).replace(/[,;:\-\s]+\S*$/, '') + '…';
+    return txt;
+  }
+
+  function extractReportBullets(rawText, max) {
+    if (!rawText) return [];
+
+    // Convert paragraph-ish HTML into newline-delimited text.
+    let text = String(rawText)
+      .replace(/<\s*br\s*\/?\s*>/gi, '\n')
+      .replace(/<\/p\s*>/gi, '\n\n')
+      .replace(/<[^>]+>/g, ' ');
+    const tmp = document.createElement('textarea');
+    tmp.innerHTML = text;
+    text = tmp.value;
+
+    // ---- Specialized parser for S2 Underground "The Wire" format -------------
+    // Pulls the BLUF (Bottom Line Up Front) and each "Region: ..." paragraph.
+    // Returns null if the input doesn't look like a Wire briefing.
+    function parseWire(t) {
+      const out = [];
+
+      // BLUF: capture between the BLUF: marker and the closing //
+      const bluf = t.match(/BLUF:\s*([\s\S]*?)\/\//i);
+      if (!bluf) return null;
+      const blufLine = bluf[1].replace(/\s+/g, ' ').trim().replace(/[.\s]+$/,'');
+      if (blufLine) out.push('BLUF — ' + blufLine);
+
+      // Drop everything before the first region paragraph (kill the headers).
+      const tearOff = t.indexOf('-----BEGIN TEARLINE-----');
+      const startFrom = tearOff > -1 ? t.slice(tearOff) : t;
+      // Split by blank lines / line breaks to get paragraphs.
+      const paras = startFrom.split(/\n\s*\n|\r\n\s*\r\n/).map(p => p.replace(/\s+/g, ' ').trim()).filter(Boolean);
+
+      // A Region line starts with a Capitalized region/country, then ":". Ignore Analyst Comment.
+      const regionLine = /^([A-Z][A-Za-z .&/-]{2,40}):\s+(.{30,})$/;
+      const skipLeading = /^(Analyst Comments?|BLUF|-----|\/\/|TEARLINE|Wire|ROUTINE|Just a few|Disclaimer|This content|Research Notes|Our Reading|The War Kitchen|Odysee|Gab|Rumble|BitChute|Patreon|Subscribe|Follow|Support)\b/i;
+
+      for (const p of paras) {
+        if (skipLeading.test(p)) continue;
+        const m = p.match(regionLine);
+        if (m) {
+          const region = m[1].trim();
+          let body = m[2].trim();
+          // Cut at the first sentence-ish boundary so each bullet stays scannable.
+          const sentEnd = body.search(/(?<=[.!?])\s+(?=[A-Z(])/);
+          if (sentEnd > 30 && sentEnd < 260) body = body.slice(0, sentEnd).trim();
+          if (body.length > 220) body = body.slice(0, 220).replace(/\s\S*$/, '') + '…';
+          out.push(region + ' — ' + body);
+        }
+      }
+      return out.length >= 2 ? out : null;
+    }
+
+    const wire = parseWire(text);
+    if (wire) return wire.slice(0, max || 8);
+
+    // ---- Fallback: generic bullet / chapter / sentence extraction ------------
+    const stopPatterns = /^(subscribe|patreon|locals|support|sources|contact|disclaimer|follow|donate|tip jar|merch|join|rumble|ko-fi|paypal|venmo|bitcoin|preview|website|email|please)/i;
+    const allLines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    let cutoff = allLines.length;
+    for (let i = 0; i < allLines.length; i++) {
+      if (stopPatterns.test(allLines[i])) { cutoff = i; break; }
+    }
+    const lines = allLines.slice(0, cutoff);
+
+    const bulletPrefix = /^([•▪●▸▶◦∙○\-*–—]|\d+\.|\d+\))\s+/;
+    const bulleted = lines.filter(l => bulletPrefix.test(l)).map(l => l.replace(bulletPrefix, '').trim());
+
+    const tsPrefix = /^(\d{1,2}:)?\d{1,2}:\d{2}\s*[-–—:]?\s*/;
+    const timestamped = lines.filter(l => tsPrefix.test(l)).map(l => l.replace(tsPrefix, '').trim()).filter(s => s.length > 3);
+
+    let out;
+    if (bulleted.length >= 3) out = bulleted;
+    else if (timestamped.length >= 3) out = timestamped;
+    else {
+      out = lines.filter(l => l.length >= 12 && l.length <= 220 && /[A-Z]/.test(l[0]) && !/^https?:/i.test(l));
+      if (out.length < 3) {
+        const joined = lines.join(' ');
+        const sentences = joined.split(/(?<=[.!?])\s+(?=[A-Z])/g).map(s => s.trim()).filter(s => s.length >= 18);
+        out = sentences;
+      }
+    }
+
+    out = out.map(s => s.replace(/\s+/g, ' ').trim());
+    out = out.map(s => s.length > 200 ? s.slice(0, 200).replace(/\s\S*$/, '') + '…' : s).filter(Boolean);
+
+    const seen = new Set();
+    out = out.filter(s => { const k = s.toLowerCase().slice(0, 60); if (seen.has(k)) return false; seen.add(k); return true; });
+
+    return out.slice(0, max || 8);
+  }
+
+  function renderArticleIntoSlot(slot, item, kind) {
+    const title = escapeHTML(item.title || 'Latest article');
+    const link = item.link || '#';
+    const when = relativeDate(item.pubDate || item.firstSeenAt);
+    const isBreaking = !!item.isBreaking;
+    const isReport = kind === 'report';
+    slot.classList.remove('loading', 'errored');
+    if (isBreaking) slot.classList.add('breaking');
+    // Stamp the parent card with pubDate (for sorting) and update the inline when-badge.
+    const card = slot.closest('.voice-item');
+    if (card) {
+      const pub = item.pubDate || item.firstSeenAt || '';
+      const pubMs = pub ? new Date(pub).getTime() : 0;
+      if (pubMs) card.setAttribute('data-pub', String(pubMs));
+      const badge = card.querySelector('.when-badge');
+      if (badge && when) {
+        badge.textContent = when;
+        if (pubMs && (Date.now() - pubMs) < 6 * 3600 * 1000) badge.classList.add('fresh');
+        else badge.classList.remove('fresh');
+      }
+    }
+    const labelText = isReport ? 'Latest brief' : 'Latest';
+    let body;
+    if (isReport) {
+      const bullets = extractReportBullets(item.excerpt || item.description || item.content || '', 8);
+      if (bullets.length) {
+        body = '<ul class="report-bullets">' + bullets.map(b => '<li>' + escapeHTML(b) + '</li>').join('') + '</ul>';
+      } else {
+        body = '<p class="latest-excerpt">Watch today’s brief for the full report.</p>';
+      }
+    } else {
+      const excerpt = escapeHTML(stripExcerpt(item.excerpt || item.description || item.content || ''));
+      body = excerpt ? '<p class="latest-excerpt">' + excerpt + '</p>' : '';
+    }
+    slot.innerHTML =
+      '<div class="latest-label">' +
+        '<span>' + (isBreaking ? '<span class="breaking-tag">Breaking</span>' : '') + labelText + '</span>' +
+        (when ? '<span class="when">' + escapeHTML(when) + '</span>' : '') +
+      '</div>' +
+      '<a class="latest-title" href="' + escapeHTML(link) + '" target="_blank" rel="noopener noreferrer">' + title + '</a>' +
+      body;
+  }
+
+  function setFeedStatus(text, live) {
+    const el = document.getElementById('feed-status');
+    if (!el) return;
+    el.classList.toggle('live', !!live);
+    el.innerHTML = live ? '<span class="dot"></span>' + escapeHTML(text) : escapeHTML(text);
+  }
+
+  // Pull the most-prominent story across all voices into the LEDE strip.
+  // Priority order:
+  //   1. Featured voice's BLUF (The Underground's daily summary headline)
+  //   2. Otherwise: newest article among all loaded cards
+  function populateLede() {
+    const strip = document.getElementById('lede-strip');
+    if (!strip) return;
+    let chosen = null;
+    // Featured card BLUF
+    const featured = document.querySelector('.voice-item.feature');
+    if (featured) {
+      const bluf = featured.querySelector('.report-bullets li:first-child');
+      const link = featured.querySelector('.latest-title');
+      const pub = parseInt(featured.getAttribute('data-pub') || '0', 10);
+      if (bluf && link && link.href) {
+        chosen = {
+          headline: bluf.textContent.replace(/^BLUF\s*[—–-]\s*/, '').trim(),
+          byline: 'The Underground',
+          when: relativeDate(new Date(pub).toISOString()),
+          href: link.href
+        };
+      }
+    }
+    // Fallback: newest non-featured card
+    if (!chosen) {
+      const cards = Array.from(document.querySelectorAll('.voice-item:not(.feature)'))
+        .map(c => ({
+          el: c,
+          pub: parseInt(c.getAttribute('data-pub') || '0', 10)
+        }))
+        .filter(x => x.pub > 0)
+        .sort((a, b) => b.pub - a.pub);
+      const top = cards[0];
+      if (top) {
+        const link = top.el.querySelector('.latest-title');
+        const name = (top.el.querySelector('.name')?.firstChild?.textContent || '').trim();
+        if (link && link.href) {
+          chosen = {
+            headline: link.textContent.trim(),
+            byline: name,
+            when: relativeDate(new Date(top.pub).toISOString()),
+            href: link.href
+          };
+        }
+      }
+    }
+    if (!chosen) { strip.hidden = true; return; }
+    document.getElementById('lede-headline').textContent = chosen.headline;
+    document.getElementById('lede-byline').textContent = chosen.byline;
+    document.getElementById('lede-when').textContent = chosen.when;
+    strip.href = chosen.href;
+    strip.hidden = false;
+  }
+
+  // Sort the voice cards by recency. Featured voices (The Underground) stay pinned at top
+  // regardless of pubDate. Cards that errored / never resolved drop to the bottom.
+  function sortVoicesByRecency() {
+    const list = document.getElementById('voice-list');
+    if (!list) return;
+    const items = Array.from(list.children);
+    items.sort((a, b) => {
+      const aFeat = a.classList.contains('feature') ? 1 : 0;
+      const bFeat = b.classList.contains('feature') ? 1 : 0;
+      if (aFeat !== bFeat) return bFeat - aFeat; // featured first
+      const aPub = parseInt(a.getAttribute('data-pub') || '0', 10);
+      const bPub = parseInt(b.getAttribute('data-pub') || '0', 10);
+      if (aPub === bPub) return 0;
+      if (!aPub) return 1;
+      if (!bPub) return -1;
+      return bPub - aPub; // newest first
+    });
+    items.forEach((el, i) => {
+      list.appendChild(el);
+      const num = el.querySelector('.num');
+      if (num) num.textContent = String(i + 1).padStart(2, '0');
+    });
+    populateLede();
+  }
+
+  function loadLatestArticles() {
+    if (FEED_AGENT_URL) {
+      fetch(FEED_AGENT_URL, { cache: 'no-store' })
+        .then(r => { if (!r.ok) throw new Error('agent http ' + r.status); return r.json(); })
+        .then(j => {
+          if (!j || !Array.isArray(j.voices) || !j.voices.length) throw new Error('agent empty');
+          const byName = Object.fromEntries(j.voices.filter(v => v && v.name).map(v => [v.name, v]));
+          const slots = document.querySelectorAll('.latest.loading');
+          let breakingCount = 0;
+          slots.forEach(slot => {
+            const voiceName = decodeURIComponent(slot.getAttribute('data-voice') || '');
+            const kind = slot.getAttribute('data-kind') || 'article';
+            const item = byName[voiceName];
+            if (item && item.title) {
+              if (item.isBreaking) breakingCount++;
+              renderArticleIntoSlot(slot, item, kind);
+            } else {
+              slot.classList.remove('loading');
+              slot.classList.add('errored');
+              slot.textContent = 'Latest article unavailable. Visit the source for the most recent reporting.';
+            }
+          });
+          const updated = j.lastUpdated ? new Date(j.lastUpdated) : null;
+          const ago = updated ? relativeDate(updated.toISOString()) : 'now';
+          if (breakingCount > 0) {
+            setFeedStatus('Live · ' + breakingCount + ' breaking · updated ' + ago, true);
+          } else {
+            setFeedStatus('Live · updated ' + ago, true);
+          }
+          sortVoicesByRecency();
+        })
+        .catch(() => {
+          // Agent unreachable — fall back to per-voice rss2json so the page still works.
+          legacyLoadLatestArticles();
+          setFeedStatus('Live feed', false);
+        });
+      return;
+    }
+    legacyLoadLatestArticles();
+  }
+
+  function legacyLoadLatestArticles() {
+    const slots = document.querySelectorAll('.latest.loading');
+    let pending = slots.length;
+    const maybeSort = () => { if (--pending <= 0) sortVoicesByRecency(); };
+    slots.forEach(slot => {
+      const rss = decodeURIComponent(slot.getAttribute('data-rss') || '');
+      const kind = slot.getAttribute('data-kind') || 'article';
+      if (!rss) return;
+      const url = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss);
+      fetch(url)
+        .then(r => r.json())
+        .then(j => {
+          if (!j || j.status !== 'ok' || !j.items || !j.items.length) throw new Error('no items');
+          const item = j.items[0];
+          let excerpt;
+          if (kind === 'report') {
+            // For reports (e.g. The Underground / S2 Underground YouTube feed), the per-video
+            // description is stripped by the rss2json proxy. Fall back to listing the recent
+            // episode titles as bullets so the reader sees what the show has been covering.
+            const desc = item.description || item.content || '';
+            if (desc && desc.trim().length > 30) {
+              excerpt = desc;
+            } else {
+              const recent = j.items.slice(1, 7).map(it => {
+                const d = it.pubDate ? ' (' + relativeDate(it.pubDate) + ')' : '';
+                return (it.title || '').replace(/^The Wire\s*[-–—]\s*/i, '') + d;
+              }).filter(Boolean);
+              excerpt = recent.join('\n');
+            }
+          } else {
+            excerpt = stripExcerpt(item.description || item.content || '');
+          }
+          renderArticleIntoSlot(slot, {
+            title: item.title,
+            link: item.link,
+            pubDate: item.pubDate,
+            excerpt: excerpt,
+            isBreaking: false
+          }, kind);
+        })
+        .catch(() => {
+          slot.classList.remove('loading');
+          slot.classList.add('errored');
+          slot.textContent = 'Latest article unavailable. Visit the source for the most recent reporting.';
+        })
+        .finally(() => maybeSort());
+    });
+  }
+
+  function captureSubmit(e) {
+    e.preventDefault();
+    const email = e.target.email.value.trim();
+    const status = document.getElementById('capture-status');
+    if (!email) return false;
+
+    const payload = JSON.stringify({ type: 'subscribe', email: email, source: 'index' });
+    const showSuccess = () => {
+      status.textContent = 'You\u2019re on the list. We\u2019ll tell you the moment the brief ships.';
+      e.target.reset();
+    };
+
+    if (!API_URL) {
+      // Backend not yet wired — store locally so launch-day can pick them up.
+      try {
+        const prev = JSON.parse(localStorage.getItem('waitlist') || '[]');
+        if (!prev.includes(email)) prev.push(email);
+        localStorage.setItem('waitlist', JSON.stringify(prev));
+      } catch (_) {}
+      showSuccess();
+      return false;
+    }
+
+    // text/plain avoids the CORS preflight that Apps Script Web Apps don't handle well.
+    fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: payload
+    })
+      .then(r => r.json())
+      .then(j => { if (!j || !j.ok) throw new Error(j && j.error || 'submit failed'); showSuccess(); })
+      .catch(() => {
+        // Failure fallback: still store locally; never lose an email.
+        try {
+          const prev = JSON.parse(localStorage.getItem('waitlist') || '[]');
+          if (!prev.includes(email)) prev.push(email);
+          localStorage.setItem('waitlist', JSON.stringify(prev));
+        } catch (_) {}
+        showSuccess();
+      });
+    return false;
+  }
+</script>
+</body>
+</html>
