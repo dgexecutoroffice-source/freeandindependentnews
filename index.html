@@ -1,4 +1,3 @@
-<!-- auto-deploy trigger: 2026-05-09T21:21:05Z -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -353,6 +352,32 @@
   ul.voice-list li.voice-item.feature .latest .latest-excerpt {
     -webkit-line-clamp: 8;
     font-size: 13px;
+  }
+  /* Auto-bulleted article previews — 3-5 scannable points per card. */
+  ul.voice-list li.voice-item .latest .article-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0;
+    display: grid;
+    gap: 4px;
+  }
+  ul.voice-list li.voice-item .latest .article-bullets li {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: #3a342a;
+    padding-left: 13px;
+    position: relative;
+  }
+  ul.voice-list li.voice-item .latest .article-bullets li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--oxblood);
+    font-weight: 700;
+    font-size: 10px;
+    line-height: 1.7;
   }
   ul.voice-list li.voice-item .latest .report-sub-label {
     font-family: "Helvetica Neue", sans-serif;
@@ -738,7 +763,6 @@
     { n: "Chris Hedges", c: "Empire / Class War", o: "Pulitzer-winning former NYT war correspondent.", t: ["War & empire","Class war","Media critique","Christian fascism","Long-form interviews"], rss: "https://chrishedges.substack.com/feed" },
     { n: "The Grayzone", c: "Empire / Investigative", o: "Independent newsroom on empire and intelligence.", t: ["Regime-change wars","Empire critique","NGO networks","Sanctions journalism","Latin America"], rss: "https://thegrayzone.com/feed/" },
     { n: "Max Blumenthal", c: "Empire / Investigative", o: "Editor of The Grayzone; author and reporter.", t: ["Israel-Palestine","Proxy wars","Pentagon influence","Election analysis","Empire critique"], rss: "https://thegrayzone.com/feed/" },
-    { n: "Ana Kasparian", c: "Domestic Politics / Commentary", o: "TYT co-host; independent commentary on Unaltered Ego.", t: ["Domestic politics","Labor & economy","Democratic Party critique","Culture wars","California politics"], rss: "https://anakasparian.substack.com/feed" },
     { n: "Catherine Austin Fitts", c: "Finance / Policy / Investigative", o: "Publisher of The Solari Report; ex-Asst. Sec. of HUD.", t: ["Financial architecture","CBDCs","Pentagon ‘missing money’","Privacy & surveillance","Portfolio strategy"], rss: "https://catherineaustinfitts.substack.com/feed" },
     { n: "The Irish Patriot", alt: "IrishPatri0t", c: "Ireland / Farmer Uprising", o: "Independent reporter on the farmer protests and government accountability in Ireland.", t: ["Farmer uprising","Government accountability","Ireland sovereignty","On-the-ground Ireland"], link: "https://x.com/IrishPatri0t", kind: "x-link" }
   ];
@@ -939,6 +963,57 @@
     return out.slice(0, max || 8);
   }
 
+  // Convert an article description (prose or HTML) into 3-5 scannable bullet points.
+  // Strategy: prefer existing list/bullet markers if present; otherwise split into sentences,
+  // drop boilerplate lead-ins, take the first N substantive ones.
+  function extractArticleBullets(rawText, max) {
+    if (!rawText) return [];
+    let text = String(rawText)
+      .replace(/<\s*br\s*\/?\s*>/gi, '\n')
+      .replace(/<\/p\s*>/gi, '\n\n')
+      .replace(/<\/li\s*>/gi, '\n')
+      .replace(/<li[^>]*>/gi, '• ')
+      .replace(/<[^>]+>/g, ' ');
+    const tmp = document.createElement('textarea');
+    tmp.innerHTML = text;
+    text = tmp.value.replace(/ /g, ' ');
+
+    // Pattern A: explicit bullets in the source
+    const allLines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    const bulletPrefix = /^([•▪●▸▶◦∙○\-*–—]|\d+\.|\d+\))\s+/;
+    const bulleted = allLines
+      .filter(l => bulletPrefix.test(l))
+      .map(l => l.replace(bulletPrefix, '').trim())
+      .filter(s => s.length >= 12 && s.length <= 240);
+    if (bulleted.length >= 3) return dedupeBullets(bulleted, max);
+
+    // Pattern B: sentence split. Drop boilerplate footers (subscribe / patreon / share / get N% off).
+    const flat = allLines.join(' ').replace(/\s+/g, ' ').trim();
+    const stopRe = /\b(subscribe|patreon|share this|get \d+% off|read the full|click here|cross-posted|read on substack|follow on|appeared first on|listen to)/i;
+    const sentences = flat.split(/(?<=[.!?])\s+(?=[A-Z(""'])/g)
+      .map(s => s.trim())
+      .filter(s => s.length >= 25 && s.length <= 240)
+      .filter(s => !stopRe.test(s));
+    if (sentences.length >= 3) return dedupeBullets(sentences, max);
+
+    // Pattern C: anything substantive — fallback short prose
+    const fallback = flat.length > 240 ? flat.slice(0, 240).replace(/[,;:\-\s]+\S*$/, '') + '…' : flat;
+    return fallback ? [fallback] : [];
+  }
+
+  function dedupeBullets(arr, max) {
+    const seen = new Set();
+    const out = [];
+    for (const s of arr) {
+      const k = s.toLowerCase().slice(0, 50);
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push(s.length > 220 ? s.slice(0, 220).replace(/\s\S*$/, '') + '…' : s);
+      if (out.length >= (max || 5)) break;
+    }
+    return out;
+  }
+
   function renderArticleIntoSlot(slot, item, kind) {
     const title = escapeHTML(item.title || 'Latest article');
     const link = item.link || '#';
@@ -970,8 +1045,14 @@
         body = '<p class="latest-excerpt">Watch today’s brief for the full report.</p>';
       }
     } else {
-      const excerpt = escapeHTML(stripExcerpt(item.excerpt || item.description || item.content || ''));
-      body = excerpt ? '<p class="latest-excerpt">' + excerpt + '</p>' : '';
+      const raw = item.excerpt || item.description || item.content || '';
+      const bullets = extractArticleBullets(raw, 5);
+      if (bullets.length >= 3) {
+        body = '<ul class="article-bullets">' + bullets.map(b => '<li>' + escapeHTML(b) + '</li>').join('') + '</ul>';
+      } else {
+        const excerpt = escapeHTML(stripExcerpt(raw));
+        body = excerpt ? '<p class="latest-excerpt">' + excerpt + '</p>' : '';
+      }
     }
     slot.innerHTML =
       '<div class="latest-label">' +
@@ -1109,6 +1190,24 @@
     legacyLoadLatestArticles();
   }
 
+  // Skip articles whose title indicates this is a narration / audio re-post of an earlier piece.
+  // The reader wants the actual story, not "Eunice Wong reads X".
+  function isNarrationItem(item) {
+    const t = ((item && item.title) || '').toLowerCase();
+    return /\b(read by|narrated by|audio version|\(audio\)|audio:|audiobook|read aloud|narration of)\b/.test(t)
+        || /^\(audio\)/i.test((item && item.title) || '')
+        || /\baudio\b.*\bversion\b/.test(t);
+  }
+
+  // Pick the first item in the feed that's not a narration / audio repost.
+  function pickFirstRealArticle(items) {
+    if (!items || !items.length) return null;
+    for (const it of items) {
+      if (!isNarrationItem(it)) return it;
+    }
+    return items[0]; // fall back to the first one if every item looks like narration
+  }
+
   function legacyLoadLatestArticles() {
     const slots = document.querySelectorAll('.latest.loading');
     let pending = slots.length;
@@ -1122,12 +1221,9 @@
         .then(r => r.json())
         .then(j => {
           if (!j || j.status !== 'ok' || !j.items || !j.items.length) throw new Error('no items');
-          const item = j.items[0];
+          const item = (kind === 'report') ? j.items[0] : pickFirstRealArticle(j.items);
           let excerpt;
           if (kind === 'report') {
-            // For reports (e.g. The Underground / S2 Underground YouTube feed), the per-video
-            // description is stripped by the rss2json proxy. Fall back to listing the recent
-            // episode titles as bullets so the reader sees what the show has been covering.
             const desc = item.description || item.content || '';
             if (desc && desc.trim().length > 30) {
               excerpt = desc;
@@ -1139,7 +1235,8 @@
               excerpt = recent.join('\n');
             }
           } else {
-            excerpt = stripExcerpt(item.description || item.content || '');
+            // Keep raw description so the renderer can split it into bullets.
+            excerpt = item.description || item.content || '';
           }
           renderArticleIntoSlot(slot, {
             title: item.title,
