@@ -319,8 +319,27 @@
     padding: 10px 12px;
     margin-top: 4px;
   }
-  /* Only the featured card shows the "LATEST · 8h" label row. Other cards put the time in the byline. */
-  ul.voice-list li.voice-item:not(.feature) .latest .latest-label { display: none; }
+  /* In stacked cards, only the FIRST article uses the byline timestamp. Older blocks show their own
+     "When" label inline, but suppress the redundant "Latest" word so the line stays compact. */
+  ul.voice-list li.voice-item:not(.feature) .article-stack > .latest:first-child .latest-label { display: none; }
+  ul.voice-list li.voice-item:not(.feature) .article-stack > .latest.older .latest-label {
+    margin-bottom: 4px;
+    font-size: 9px;
+  }
+  ul.voice-list li.voice-item:not(.feature) .article-stack > .latest.older .latest-label > span:first-child { display: none; }
+  /* Older articles in the stack get a subtle dividing rule and slightly smaller treatment. */
+  ul.voice-list li.voice-item .article-stack > .latest.older {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--rule);
+  }
+  ul.voice-list li.voice-item .article-stack > .latest.older .latest-title {
+    font-size: 14px;
+    line-height: 1.22;
+  }
+  ul.voice-list li.voice-item .article-stack > .latest.older .article-bullets li {
+    font-size: 12px;
+  }
   ul.voice-list li.voice-item .latest .latest-label {
     font-family: "Helvetica Neue", sans-serif;
     font-size: 9.5px;
@@ -868,7 +887,9 @@
       const isXLink = v.kind === 'x-link';
       let slot = '';
       if (v.rss) {
-        slot = `<div class="latest loading" data-rss="${encodeURIComponent(v.rss)}" data-voice="${encodeURIComponent(v.n)}" data-kind="${isReport ? 'report' : 'article'}">${isReport ? 'Loading today&rsquo;s brief&hellip;' : 'Loading latest&hellip;'}</div>`;
+        // Reports (The Underground) stay single-article. Other voices stack up to 3 most-recent posts.
+        const stackMax = isReport ? 1 : 3;
+        slot = `<div class="article-stack loading" data-rss="${encodeURIComponent(v.rss)}" data-voice="${encodeURIComponent(v.n)}" data-kind="${isReport ? 'report' : 'article'}" data-max="${stackMax}"><div class="latest loading">${isReport ? 'Loading today&rsquo;s brief&hellip;' : 'Loading latest&hellip;'}</div></div>`;
       } else if (isXLink && v.link) {
         // No public RSS for X — render a static "Visit on X" tile that links straight to the profile.
         const handle = (v.alt || '').replace(/\s+/g, '');
@@ -1090,9 +1111,12 @@
     const isReport = kind === 'report';
     slot.classList.remove('loading', 'errored');
     if (isBreaking) slot.classList.add('breaking');
-    // Stamp the parent card with pubDate (for sorting) and update the inline when-badge.
+    // Stamp the parent card with pubDate / when-badge ONLY for the first (newest) article in a stack.
+    // Older blocks keep their own timestamp inside the .latest-label instead.
     const card = slot.closest('.voice-item');
-    if (card) {
+    const stack = slot.closest('.article-stack');
+    const isFirstInStack = stack ? (slot === stack.querySelector('.latest')) : true;
+    if (card && isFirstInStack) {
       const pub = item.pubDate || item.firstSeenAt || '';
       const pubMs = pub ? new Date(pub).getTime() : 0;
       if (pubMs) card.setAttribute('data-pub', String(pubMs));
@@ -1189,52 +1213,83 @@
     el.innerHTML = live ? '<span class="dot"></span>' + escapeHTML(text) : escapeHTML(text);
   }
 
-  // Pull the most-prominent story across all voices into the LEDE strip.
-  // Priority order:
-  //   1. Featured voice's BLUF (The Underground's daily summary headline)
-  //   2. Otherwise: newest article among all loaded cards
+  // Pick the freshest article across the desk for the LEDE strip.
+  // Priority:
+  //   1. Newest article published TODAY (any voice, including The Underground if its brief is today)
+  //   2. If The Underground's brief is today, prefer its BLUF (it's the daily summary)
+  //   3. Otherwise: newest article overall (yesterday or older)
   function populateLede() {
     const strip = document.getElementById('lede-strip');
     if (!strip) return;
+    const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+    const todayMs = todayStart.getTime();
+
+    // Collect every (visible) article block on the page.
+    const blocks = Array.from(document.querySelectorAll('.voice-item .latest'))
+      .filter(el => el.querySelector('.latest-title'))
+      .map(el => {
+        const titleEl = el.querySelector('.latest-title');
+        const card = el.closest('.voice-item');
+        const cardPub = parseInt(card && card.getAttribute('data-pub') || '0', 10);
+        // Each block also carries its own timestamp via .latest-label .when (relative). For sort we
+        // use the card-level pub for the first block and try to read individual block pubs if available.
+        const labelWhen = (el.querySelector('.latest-label .when') || {}).textContent || '';
+        return {
+          el, card,
+          title: (titleEl.textContent || '').trim(),
+          href: titleEl.href,
+          pub: cardPub,
+          when: labelWhen,
+          isFeature: !!card.classList.contains('feature'),
+          isFirst: el === card.querySelector('.latest')
+        };
+      })
+      .filter(b => b.title && b.href && b.pub > 0);
+
+    // Today's articles (within last ~28h to absorb timezone slack)
+    const todayWindow = todayMs - 4 * 3600 * 1000;
+    const todays = blocks.filter(b => b.pub >= todayWindow).sort((a, b) => b.pub - a.pub);
+
     let chosen = null;
-    // Featured card BLUF
-    const featured = document.querySelector('.voice-item.feature');
-    if (featured) {
-      const bluf = featured.querySelector('.report-bullets li:first-child');
-      const link = featured.querySelector('.latest-title');
-      const pub = parseInt(featured.getAttribute('data-pub') || '0', 10);
-      if (bluf && link && link.href) {
+
+    if (todays.length) {
+      const featuredToday = todays.find(b => b.isFeature && b.isFirst);
+      if (featuredToday) {
+        // The Underground's brief is today — use its BLUF if extractable, otherwise its title
+        const bluf = featuredToday.el.querySelector('.report-bullets li:first-child');
         chosen = {
-          headline: bluf.textContent.replace(/^BLUF\s*[—–-]\s*/, '').trim(),
+          headline: bluf ? bluf.textContent.replace(/^BLUF\s*[—–-]\s*/, '').trim() : featuredToday.title,
           byline: 'The Underground',
-          when: relativeDate(new Date(pub).toISOString()),
-          href: link.href
+          when: relativeDate(new Date(featuredToday.pub).toISOString()),
+          href: featuredToday.href
+        };
+      } else {
+        // Newest non-featured article posted today
+        const top = todays[0];
+        const name = (top.card.querySelector('.name')?.firstChild?.textContent || '').trim();
+        chosen = {
+          headline: top.title,
+          byline: name,
+          when: relativeDate(new Date(top.pub).toISOString()),
+          href: top.href
+        };
+      }
+    } else {
+      // No articles today. Fall back to newest overall (yesterday or older).
+      const sorted = blocks.slice().sort((a, b) => b.pub - a.pub);
+      const top = sorted[0];
+      if (top) {
+        const name = top.isFeature ? 'The Underground' :
+          (top.card.querySelector('.name')?.firstChild?.textContent || '').trim();
+        chosen = {
+          headline: top.title,
+          byline: name,
+          when: relativeDate(new Date(top.pub).toISOString()),
+          href: top.href
         };
       }
     }
-    // Fallback: newest non-featured card
-    if (!chosen) {
-      const cards = Array.from(document.querySelectorAll('.voice-item:not(.feature)'))
-        .map(c => ({
-          el: c,
-          pub: parseInt(c.getAttribute('data-pub') || '0', 10)
-        }))
-        .filter(x => x.pub > 0)
-        .sort((a, b) => b.pub - a.pub);
-      const top = cards[0];
-      if (top) {
-        const link = top.el.querySelector('.latest-title');
-        const name = (top.el.querySelector('.name')?.firstChild?.textContent || '').trim();
-        if (link && link.href) {
-          chosen = {
-            headline: link.textContent.trim(),
-            byline: name,
-            when: relativeDate(new Date(top.pub).toISOString()),
-            href: link.href
-          };
-        }
-      }
-    }
+
     if (!chosen) { strip.hidden = true; return; }
     document.getElementById('lede-headline').textContent = chosen.headline;
     document.getElementById('lede-byline').textContent = chosen.byline;
@@ -1346,47 +1401,72 @@
   }
 
   function legacyLoadLatestArticles() {
-    const slots = document.querySelectorAll('.latest.loading');
-    let pending = slots.length;
-    const maybeSort = () => { if (--pending <= 0) sortVoicesByRecency(); };
-    slots.forEach(slot => {
-      const rss = decodeURIComponent(slot.getAttribute('data-rss') || '');
-      const kind = slot.getAttribute('data-kind') || 'article';
-      if (!rss) return;
+    const stacks = document.querySelectorAll('.article-stack.loading');
+    let pending = stacks.length;
+    const maybeSort = () => { if (--pending <= 0) { sortVoicesByRecency(); populateLede(); } };
+    stacks.forEach(stack => {
+      const rss = decodeURIComponent(stack.getAttribute('data-rss') || '');
+      const kind = stack.getAttribute('data-kind') || 'article';
+      const stackMax = parseInt(stack.getAttribute('data-max') || '1', 10);
+      if (!rss) { stack.classList.remove('loading'); maybeSort(); return; }
       const url = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss);
       fetch(url)
         .then(r => r.json())
         .then(j => {
           if (!j || j.status !== 'ok' || !j.items || !j.items.length) throw new Error('no items');
-          const item = (kind === 'report') ? j.items[0] : pickFirstRealArticle(j.items);
-          let excerpt;
           if (kind === 'report') {
+            // Single brief — keep the existing report flow (BLUF + region bullets).
+            const item = j.items[0];
             const desc = bestText(item);
-            if (desc && desc.trim().length > 30) {
-              excerpt = desc;
-            } else {
-              const recent = j.items.slice(1, 7).map(it => {
-                const d = it.pubDate ? ' (' + relativeDate(it.pubDate) + ')' : '';
-                return (it.title || '').replace(/^The Wire\s*[-–—]\s*/i, '') + d;
-              }).filter(Boolean);
-              excerpt = recent.join('\n');
-            }
+            const excerpt = (desc && desc.trim().length > 30)
+              ? desc
+              : j.items.slice(1, 7).map(it => {
+                  const d = it.pubDate ? ' (' + relativeDate(it.pubDate) + ')' : '';
+                  return (it.title || '').replace(/^The Wire\s*[-–—]\s*/i, '') + d;
+                }).filter(Boolean).join('\n');
+            stack.classList.remove('loading');
+            stack.innerHTML = '<div class="latest loading"></div>';
+            const inner = stack.querySelector('.latest');
+            renderArticleIntoSlot(inner, {
+              title: item.title, link: item.link, pubDate: item.pubDate, excerpt: excerpt, isBreaking: false
+            }, 'report');
           } else {
-            // Use the richer text source (description vs content, whichever is longer).
-            excerpt = bestText(item);
+            // Stack up to N most-recent non-narration substantive items.
+            const candidates = (j.items || []).filter(it => !isNarrationItem(it));
+            const picked = [];
+            for (const it of candidates) {
+              if (!isThinItem(it)) picked.push(it);
+              if (picked.length >= stackMax) break;
+            }
+            // If we don't have N substantive items, fall back to the first non-narration ones to fill up to N.
+            if (picked.length < stackMax) {
+              for (const it of candidates) {
+                if (picked.indexOf(it) === -1) picked.push(it);
+                if (picked.length >= stackMax) break;
+              }
+            }
+            if (!picked.length) throw new Error('no real items');
+
+            stack.classList.remove('loading');
+            stack.innerHTML = '';
+            picked.forEach((item, i) => {
+              const block = document.createElement('div');
+              block.className = 'latest loading' + (i > 0 ? ' older' : '');
+              stack.appendChild(block);
+              renderArticleIntoSlot(block, {
+                title: item.title, link: item.link, pubDate: item.pubDate, excerpt: bestText(item), isBreaking: false
+              }, 'article');
+            });
+            // Stamp parent card with NEWEST pubDate for sort/lede.
+            const card = stack.closest('.voice-item');
+            const newestPub = picked[0] && picked[0].pubDate ? new Date(picked[0].pubDate).getTime() : 0;
+            if (card && newestPub) card.setAttribute('data-pub', String(newestPub));
           }
-          renderArticleIntoSlot(slot, {
-            title: item.title,
-            link: item.link,
-            pubDate: item.pubDate,
-            excerpt: excerpt,
-            isBreaking: false
-          }, kind);
         })
         .catch(() => {
-          slot.classList.remove('loading');
-          slot.classList.add('errored');
-          slot.textContent = 'Latest article unavailable. Visit the source for the most recent reporting.';
+          stack.classList.remove('loading');
+          stack.classList.add('errored');
+          stack.textContent = 'Latest unavailable. Visit the source for current reporting.';
         })
         .finally(() => maybeSort());
     });
