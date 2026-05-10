@@ -9,7 +9,11 @@
 <meta property="og:description" content="A dozen independent voices. Your desk. No algorithm." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://freeandindependentnews.com" />
+<meta property="og:image" content="https://freeandindependentnews.com/og-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://freeandindependentnews.com/og-card.png" />
 <meta name="theme-color" content="#9b1c2c" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%239b1c2c'/%3E%3Ctext x='16' y='25' font-family='Georgia,serif' font-size='24' fill='%23faf8f2' text-anchor='middle' font-weight='900'%3EF%3C/text%3E%3Ccircle cx='25' cy='8' r='3' fill='%23c89b3c'/%3E%3C/svg%3E" />
 <style>
@@ -82,6 +86,20 @@
   }
   @media (max-width: 720px) {
     header.site .tagline { display: none; }
+    header.site { gap: 8px; padding-bottom: 8px; margin-bottom: 14px; }
+    header.site .masthead-meta { flex: 1 1 100%; order: 3; }
+    .nav-min a { margin-left: 10px; font-size: 11px; }
+    .wrap { padding: 14px 16px; }
+    .lede-strip { margin-bottom: 10px; padding: 9px 11px; }
+    .lede-strip .lede-headline { font-size: 14px; }
+    .lede-strip .lede-meta { font-size: 9px; }
+  }
+  @media (max-width: 540px) {
+    .lede-strip .lede-kicker { font-size: 9px; letter-spacing: 0.16em; }
+    ul.voice-list li.voice-item.feature .latest .latest-title { font-size: 16px; }
+    ul.voice-list li.voice-item .latest .latest-title { font-size: 15px; }
+    section.brief-band { padding: 10px 12px; }
+    section.brief-band .brief-band-text { font-size: 13px; }
   }
   .nav { font-family: "Helvetica Neue", sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
   .nav a { margin-left: 16px; color: var(--ink); text-decoration: none; }
@@ -352,6 +370,43 @@
   ul.voice-list li.voice-item.feature .latest .latest-excerpt {
     -webkit-line-clamp: 8;
     font-size: 13px;
+  }
+  /* Share row — copy / X / Telegram / email under each headline. */
+  ul.voice-list li.voice-item .share-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 7px 0 0;
+    color: var(--muted);
+  }
+  ul.voice-list li.voice-item .share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--muted);
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: none;
+    transition: color 0.12s, border-color 0.12s, background 0.12s;
+  }
+  ul.voice-list li.voice-item .share-btn:hover {
+    color: var(--oxblood);
+    border-color: var(--oxblood);
+    background: rgba(155, 28, 44, 0.06);
+  }
+  ul.voice-list li.voice-item .share-toast {
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--oxblood);
+    font-weight: 700;
+    margin-left: 4px;
   }
   /* Auto-bulleted article previews — 3-5 scannable points per card. */
   ul.voice-list li.voice-item .latest .article-bullets {
@@ -1067,14 +1122,65 @@
         body = excerpt ? '<p class="latest-excerpt">' + excerpt + '</p>' : '';
       }
     }
+    const shareTitle = title.replace(/<[^>]+>/g, '');
     slot.innerHTML =
       '<div class="latest-label">' +
         '<span>' + (isBreaking ? '<span class="breaking-tag">Breaking</span>' : '') + labelText + '</span>' +
         (when ? '<span class="when">' + escapeHTML(when) + '</span>' : '') +
       '</div>' +
       '<a class="latest-title" href="' + escapeHTML(link) + '" target="_blank" rel="noopener noreferrer">' + title + '</a>' +
-      body;
+      body +
+      shareRowHTML(shareTitle, link);
   }
+
+  // Tiny share row under each card — copy / X / Telegram / email.
+  function shareRowHTML(title, link) {
+    if (!link || link === '#') return '';
+    const t = encodeURIComponent(title);
+    const u = encodeURIComponent(link);
+    const data = encodeURIComponent(JSON.stringify({ t: title, l: link }));
+    return '<div class="share-row" data-share="' + data + '">' +
+      '<button type="button" class="share-btn" data-share-action="copy" title="Copy link" aria-label="Copy link">' +
+        '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+      '</button>' +
+      '<a class="share-btn" target="_blank" rel="noopener noreferrer" href="https://x.com/intent/post?text=' + t + '&url=' + u + '" title="Share to X" aria-label="Share to X">' +
+        '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M18.244 2H21l-6.52 7.45L22 22h-6.13l-4.81-6.29L5.6 22H3l7.02-8.02L2 2h6.27l4.36 5.78L18.24 2zm-1.07 18h1.7L7.02 4h-1.8l11.95 16z"/></svg>' +
+      '</a>' +
+      '<a class="share-btn" target="_blank" rel="noopener noreferrer" href="https://t.me/share/url?url=' + u + '&text=' + t + '" title="Share to Telegram" aria-label="Share to Telegram">' +
+        '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M22 2.5l-3.4 16c-.25 1.13-.93 1.4-1.88.88l-5.2-3.84-2.5 2.4c-.28.28-.5.5-1.05.5l.37-5.27 9.6-8.66c.41-.37-.09-.57-.65-.21L5.5 11.43 1.4 10.13c-.93-.3-.95-.93.2-1.38L20.7.97c.78-.28 1.45.18 1.3 1.53z"/></svg>' +
+      '</a>' +
+      '<a class="share-btn" target="_blank" rel="noopener noreferrer" href="mailto:?subject=' + t + '&body=' + u + '" title="Share via email" aria-label="Share via email">' +
+        '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>' +
+      '</a>' +
+      '<span class="share-toast" aria-live="polite"></span>' +
+    '</div>';
+  }
+
+  // Delegate listener for the per-card "copy link" button.
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest && e.target.closest('button.share-btn[data-share-action="copy"]');
+    if (!btn) return;
+    e.preventDefault();
+    const row = btn.closest('.share-row');
+    const data = row && row.getAttribute('data-share');
+    let link = '';
+    try { link = JSON.parse(decodeURIComponent(data || '{}')).l || ''; } catch (_) {}
+    if (!link) return;
+    const toast = row.querySelector('.share-toast');
+    const showCopied = () => { if (toast) { toast.textContent = 'Copied'; setTimeout(() => { toast.textContent = ''; }, 1800); } };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(link).then(showCopied, () => {});
+    } else {
+      // Legacy fallback for older browsers
+      const ta = document.createElement('textarea');
+      ta.value = link;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); showCopied(); } catch (_) {}
+      document.body.removeChild(ta);
+    }
+  });
 
   function setFeedStatus(text, live) {
     const el = document.getElementById('feed-status');
@@ -1204,7 +1310,6 @@
   }
 
   // Skip articles whose title indicates this is a narration / audio re-post of an earlier piece.
-  // The reader wants the actual story, not "Eunice Wong reads X".
   function isNarrationItem(item) {
     const t = ((item && item.title) || '').toLowerCase();
     return /\b(read by|narrated by|audio version|\(audio\)|audio:|audiobook|read aloud|narration of)\b/.test(t)
@@ -1212,13 +1317,32 @@
         || /\baudio\b.*\bversion\b/.test(t);
   }
 
-  // Pick the first item in the feed that's not a narration / audio repost.
+  // Get the richest text source from a feed item — prefer the longer of description vs content.
+  // Substacks often put the email-preview in `description` and the full post HTML in `content`.
+  function bestText(item) {
+    if (!item) return '';
+    const d = String(item.description || '');
+    const c = String(item.content || '');
+    return d.length >= c.length ? d : c;
+  }
+
+  // A "real" article needs both: not-narration AND enough text to extract bullets from.
+  // Thin posts (Yon's "Captain Obvious") get skipped in favor of an earlier substantive one.
+  function isThinItem(item) {
+    const text = bestText(item).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    return text.length < 60;
+  }
+
+  // Pick the first feed item that's both substantive and not a narration.
   function pickFirstRealArticle(items) {
     if (!items || !items.length) return null;
+    let firstNonNarration = null;
     for (const it of items) {
-      if (!isNarrationItem(it)) return it;
+      if (isNarrationItem(it)) continue;
+      if (!firstNonNarration) firstNonNarration = it;
+      if (!isThinItem(it)) return it;       // ideal: substantive + non-narration
     }
-    return items[0]; // fall back to the first one if every item looks like narration
+    return firstNonNarration || items[0];   // fall back to non-narration even if thin
   }
 
   function legacyLoadLatestArticles() {
@@ -1237,7 +1361,7 @@
           const item = (kind === 'report') ? j.items[0] : pickFirstRealArticle(j.items);
           let excerpt;
           if (kind === 'report') {
-            const desc = item.description || item.content || '';
+            const desc = bestText(item);
             if (desc && desc.trim().length > 30) {
               excerpt = desc;
             } else {
@@ -1248,8 +1372,8 @@
               excerpt = recent.join('\n');
             }
           } else {
-            // Keep raw description so the renderer can split it into bullets.
-            excerpt = item.description || item.content || '';
+            // Use the richer text source (description vs content, whichever is longer).
+            excerpt = bestText(item);
           }
           renderArticleIntoSlot(slot, {
             title: item.title,

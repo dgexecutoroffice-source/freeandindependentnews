@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#faf8f2"/>
+  <line x1="60" y1="148" x2="1140" y2="148" stroke="#1a1a1a" stroke-width="2"/>
+
+  <!-- Masthead -->
+  <text x="60" y="115" font-family="Bookman Old Style, Georgia, serif" font-weight="900" font-size="78" fill="#9b1c2c" textLength="270" lengthAdjust="spacingAndGlyphs">FREE</text>
+  <text x="350" y="110" font-family="Georgia, serif" font-style="italic" font-weight="700" font-size="64" fill="#c89b3c">&amp;</text>
+  <text x="420" y="115" font-family="Bookman Old Style, Georgia, serif" font-weight="900" font-size="78" fill="#1f3d2b" textLength="600" lengthAdjust="spacingAndGlyphs">INDEPENDENT</text>
+  <text x="60" y="180" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="700" font-size="34" letter-spacing="14" fill="#1a1a1a">NEWS</text>
+
+  <!-- Lede block -->
+  <rect x="60" y="240" width="1080" height="220" fill="#1a1a1a"/>
+  <rect x="60" y="240" width="6" height="220" fill="#9b1c2c"/>
+  <text x="100" y="296" font-family="Helvetica Neue, sans-serif" font-weight="800" font-size="22" letter-spacing="5" fill="#c89b3c">TODAY ON THE DESK</text>
+  <text x="100" y="358" font-family="Georgia, serif" font-weight="700" font-size="46" fill="#faf8f2">A dozen independent voices.</text>
+  <text x="100" y="412" font-family="Georgia, serif" font-weight="400" font-size="32" fill="#faf8f2" font-style="italic">Your desk. No algorithm.</text>
+
+  <!-- Footer line -->
+  <text x="60" y="540" font-family="Helvetica Neue, sans-serif" font-size="22" font-weight="600" letter-spacing="3" fill="#6b6152">THE INDEPENDENT NEWS DESK</text>
+  <text x="60" y="585" font-family="Georgia, serif" font-style="italic" font-size="22" fill="#6b6152">freeandindependentnews.com</text>
+
+  <!-- Brand red accent stroke -->
+  <line x1="60" y1="500" x2="220" y2="500" stroke="#9b1c2c" stroke-width="3"/>
+</svg>
