@@ -136,7 +136,7 @@
   @media (max-width: 760px) { section.how { grid-template-columns: 1fr; gap: 26px; } }
 
   section.my-desk {
-    margin-bottom: 32px;
+    margin-bottom: 22px;
   }
   section.my-desk .desk-head {
     border-bottom: 2px solid var(--ink);
@@ -196,7 +196,7 @@
   ul.voice-list {
     list-style: none;
     padding: 0;
-    margin: 8px 0 0;
+    margin: 4px 0 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     column-gap: 22px;
@@ -212,7 +212,7 @@
   ul.voice-list li.voice-item {
     border-top: 1px solid var(--rule);
     background: transparent;
-    padding: 10px 0 10px 12px;
+    padding: 7px 0 8px 12px;
     border-left: 3px solid transparent;
     display: block;
     position: relative;
@@ -223,8 +223,8 @@
     background: var(--accent-soft);
     border: 1px solid var(--oxblood);
     border-left: 4px solid var(--oxblood);
-    padding: 14px 16px;
-    margin-bottom: 6px;
+    padding: 11px 14px;
+    margin-bottom: 2px;
   }
   ul.voice-list li.voice-item .num { display: none; }   /* visual rank, not needed */
   ul.voice-list li.voice-item .meta { display: none; }  /* drop category clutter */
@@ -236,7 +236,7 @@
     letter-spacing: 0.14em;
     text-transform: uppercase;
     line-height: 1.2;
-    margin: 0 0 5px;
+    margin: 0 0 3px;
     color: var(--muted);
     display: flex;
     align-items: baseline;
@@ -329,8 +329,8 @@
   ul.voice-list li.voice-item:not(.feature) .article-stack > .latest.older .latest-label > span:first-child { display: none; }
   /* Older articles in the stack get a subtle dividing rule and slightly smaller treatment. */
   ul.voice-list li.voice-item .article-stack > .latest.older {
-    margin-top: 12px;
-    padding-top: 10px;
+    margin-top: 7px;
+    padding-top: 6px;
     border-top: 1px solid var(--rule);
   }
   ul.voice-list li.voice-item .article-stack > .latest.older .latest-title {
@@ -362,9 +362,9 @@
     color: var(--ink);
     text-decoration: none;
     font-size: 16px;
-    line-height: 1.2;
+    line-height: 1.18;
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     overflow-wrap: break-word;
     word-break: break-word;
     font-family: Georgia, serif;
@@ -395,7 +395,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    margin: 7px 0 0;
+    margin: 4px 0 0;
     color: var(--muted);
   }
   ul.voice-list li.voice-item .share-btn {
@@ -431,9 +431,9 @@
   ul.voice-list li.voice-item .latest .article-bullets {
     list-style: none;
     padding: 0;
-    margin: 5px 0 0;
+    margin: 3px 0 0;
     display: grid;
-    gap: 4px;
+    gap: 3px;
   }
   ul.voice-list li.voice-item .latest .article-bullets li {
     font-family: Georgia, "Times New Roman", serif;
@@ -554,8 +554,8 @@
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--muted);
-    margin: 0 0 8px;
-    min-height: 14px;
+    margin: 0 0 2px;
+    min-height: 0;
   }
   .feed-status.live {
     color: var(--oxblood);
@@ -610,8 +610,8 @@
     grid-template-columns: auto 1fr auto;
     align-items: baseline;
     gap: 14px;
-    padding: 10px 14px;
-    margin: 0 0 12px;
+    padding: 9px 14px;
+    margin: 0 0 6px;
     background: var(--ink);
     color: var(--paper);
     text-decoration: none;
