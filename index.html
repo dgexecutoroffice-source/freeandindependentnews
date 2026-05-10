@@ -193,38 +193,65 @@
     white-space: nowrap;
   }
   section.my-desk .lede a:hover { text-decoration: underline; }
+  /* Featured strip — full-width row above the column flow. Hosts The Underground (or any
+     v.feature voice). Lives outside the multi-column list so it can span the page edge-to-edge
+     without breaking the masonry below. */
+  .featured-strip {
+    margin: 4px 0 14px;
+  }
+  .featured-strip:empty { display: none; }
+  .featured-strip .voice-item.feature {
+    background: var(--accent-soft);
+    border: 1px solid var(--oxblood);
+    border-left: 4px solid var(--oxblood);
+    padding: 9px 14px 8px;
+    margin: 0;
+    list-style: none;
+    display: block;
+    position: relative;
+    min-width: 0;
+  }
+  /* Multi-column layout — cards flow vertically inside columns instead of equal-height rows,
+     so a short card no longer stretches to match its tallest neighbor. */
   ul.voice-list {
     list-style: none;
     padding: 0;
-    margin: 4px 0 0;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    column-count: 3;
     column-gap: 22px;
-    row-gap: 0;
+    column-fill: balance;
   }
   @media (max-width: 1080px) {
-    ul.voice-list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 18px; }
+    ul.voice-list { column-count: 2; column-gap: 18px; }
   }
   @media (max-width: 720px) {
-    ul.voice-list { grid-template-columns: 1fr; column-gap: 0; }
+    ul.voice-list { column-count: 1; column-gap: 0; }
   }
-  /* Dense news-feed cards: byline up top (small), headline (bold, big), excerpt (tight). */
+  /* Dense news-feed cards: byline up top (small), headline (bold, big), excerpt (tight).
+     break-inside: avoid keeps each card whole inside one column. */
   ul.voice-list li.voice-item {
     border-top: 1px solid var(--rule);
     background: transparent;
     padding: 5px 0 6px 12px;
     border-left: 3px solid transparent;
-    display: block;
+    display: inline-block;
+    width: 100%;
     position: relative;
     min-width: 0;
+    margin: 0 0 10px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    -webkit-column-break-inside: avoid;
   }
+  /* Legacy fallback: if any feature card ends up inside the voice-list, render it as a full row. */
   ul.voice-list li.voice-item.feature {
-    grid-column: 1 / -1;
+    column-span: all;
+    -webkit-column-span: all;
     background: var(--accent-soft);
     border: 1px solid var(--oxblood);
     border-left: 4px solid var(--oxblood);
     padding: 9px 14px 8px;
-    margin-bottom: 0;
+    margin-bottom: 12px;
   }
   ul.voice-list li.voice-item .num { display: none; }   /* visual rank, not needed */
   ul.voice-list li.voice-item .meta { display: none; }  /* drop category clutter */
@@ -779,6 +806,7 @@
 
   <section class="my-desk" id="my-desk" aria-label="Today on the desk">
     <div class="feed-status" id="feed-status" aria-live="polite"></div>
+    <div class="featured-strip" id="featured-strip" aria-label="Featured brief"></div>
     <ul class="voice-list" id="voice-list"></ul>
   </section>
 
@@ -860,9 +888,11 @@
     }
     const byName = Object.fromEntries(ALL_VOICES.map(v => [v.n, v]));
     const list = document.getElementById('voice-list');
+    const strip = document.getElementById('featured-strip');
     if (!names.length) {
       // Empty-desk message rendered into the voice list itself since the desk-head was removed.
-      list.innerHTML = '<li style="padding:20px 0;font-family:Georgia,serif;color:var(--muted);grid-column:1/-1;">Your desk is empty. <a href="/desk.html" style="color:var(--oxblood);font-weight:700;">Build your desk &rarr;</a></li>';
+      if (strip) strip.innerHTML = '';
+      list.innerHTML = '<li style="padding:20px 0;font-family:Georgia,serif;color:var(--muted);">Your desk is empty. <a href="/desk.html" style="color:var(--oxblood);font-weight:700;">Build your desk &rarr;</a></li>';
       return;
     }
 
@@ -874,10 +904,9 @@
       const dl = document.getElementById('dateline');
       if (dl) dl.textContent = wkday + ' · ' + dateStr;
     } catch (_) {}
-    list.innerHTML = names.map((nm, i) => {
-      const v = byName[nm];
-      if (!v) return '';
-      const num = String(i + 1).padStart(2, '0');
+
+    // Build the card HTML for a single voice. Used for both the featured-strip and the column list.
+    function cardHTML(v, i) {
       const isReport = v.kind === 'report';
       const isXLink = v.kind === 'x-link';
       let slot = '';
@@ -886,7 +915,6 @@
         const stackMax = isReport ? 1 : 3;
         slot = `<div class="article-stack loading" data-rss="${encodeURIComponent(v.rss)}" data-voice="${encodeURIComponent(v.n)}" data-kind="${isReport ? 'report' : 'article'}" data-max="${stackMax}"><div class="latest loading">${isReport ? 'Loading today&rsquo;s brief&hellip;' : 'Loading latest&hellip;'}</div></div>`;
       } else if (isXLink && v.link) {
-        // No public RSS for X — render a static "Visit on X" tile that links straight to the profile.
         const handle = (v.alt || '').replace(/\s+/g, '');
         slot = `<a class="latest x-link" href="${v.link}" target="_blank" rel="noopener noreferrer">
           <div class="latest-label"><span>Live updates</span><span class="when">on X</span></div>
@@ -894,8 +922,6 @@
         </a>`;
       }
       const cls = 'voice-item' + (v.feature ? ' feature' : '');
-      // Featured card keeps the alt-handle pill + the one-line description for context.
-      // All other cards drop both — byline + headline + excerpt only.
       const altLine = v.alt ? `<div class="alt-handle">On X · @${v.alt.replace(/\s+/g,'')}</div>` : '';
       const oneLine = v.feature ? `<p class="one">${v.o}</p>` : '';
       return `<li class="${cls}" data-voice-key="${encodeURIComponent(v.n)}" data-pub="">
@@ -904,7 +930,18 @@
         ${oneLine}
         ${slot}
       </li>`;
-    }).join('');
+    }
+
+    // Split into featured (full-width strip) vs everyone else (column flow).
+    const voices = names.map(nm => byName[nm]).filter(Boolean);
+    const featuredVoices = voices.filter(v => v.feature);
+    const regularVoices = voices.filter(v => !v.feature);
+
+    // Featured strip uses <ul> wrappers for each item so the .voice-item.feature CSS still matches.
+    if (strip) {
+      strip.innerHTML = featuredVoices.map((v, i) => `<ul style="list-style:none;padding:0;margin:0;">${cardHTML(v, i)}</ul>`).join('');
+    }
+    list.innerHTML = regularVoices.map((v, i) => cardHTML(v, i)).join('');
     loadLatestArticles();
   })();
 
@@ -1219,8 +1256,9 @@
     const todayStart = new Date(); todayStart.setHours(0,0,0,0);
     const todayMs = todayStart.getTime();
 
-    // Collect every (visible) article block on the page.
-    const blocks = Array.from(document.querySelectorAll('.voice-item .latest'))
+    // Collect every (visible) article block on the page — pulls from BOTH the featured strip
+    // and the column-flow voice list, so today's lede can come from either zone.
+    const blocks = Array.from(document.querySelectorAll('#featured-strip .voice-item .latest, #voice-list .voice-item .latest'))
       .filter(el => el.querySelector('.latest-title'))
       .map(el => {
         const titleEl = el.querySelector('.latest-title');
@@ -1293,16 +1331,14 @@
     strip.hidden = false;
   }
 
-  // Sort the voice cards by recency. Featured voices (The Underground) stay pinned at top
-  // regardless of pubDate. Cards that errored / never resolved drop to the bottom.
+  // Sort the voice cards by recency. The featured strip lives in its own container
+  // (#featured-strip) so we only sort #voice-list here. Cards that errored / never resolved
+  // drop to the bottom.
   function sortVoicesByRecency() {
     const list = document.getElementById('voice-list');
     if (!list) return;
     const items = Array.from(list.children);
     items.sort((a, b) => {
-      const aFeat = a.classList.contains('feature') ? 1 : 0;
-      const bFeat = b.classList.contains('feature') ? 1 : 0;
-      if (aFeat !== bFeat) return bFeat - aFeat; // featured first
       const aPub = parseInt(a.getAttribute('data-pub') || '0', 10);
       const bPub = parseInt(b.getAttribute('data-pub') || '0', 10);
       if (aPub === bPub) return 0;
