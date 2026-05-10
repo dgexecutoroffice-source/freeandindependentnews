@@ -212,7 +212,7 @@
   ul.voice-list li.voice-item {
     border-top: 1px solid var(--rule);
     background: transparent;
-    padding: 7px 0 8px 12px;
+    padding: 5px 0 6px 12px;
     border-left: 3px solid transparent;
     display: block;
     position: relative;
@@ -223,8 +223,8 @@
     background: var(--accent-soft);
     border: 1px solid var(--oxblood);
     border-left: 4px solid var(--oxblood);
-    padding: 11px 14px;
-    margin-bottom: 2px;
+    padding: 9px 14px 8px;
+    margin-bottom: 0;
   }
   ul.voice-list li.voice-item .num { display: none; }   /* visual rank, not needed */
   ul.voice-list li.voice-item .meta { display: none; }  /* drop category clutter */
@@ -329,8 +329,8 @@
   ul.voice-list li.voice-item:not(.feature) .article-stack > .latest.older .latest-label > span:first-child { display: none; }
   /* Older articles in the stack get a subtle dividing rule and slightly smaller treatment. */
   ul.voice-list li.voice-item .article-stack > .latest.older {
-    margin-top: 7px;
-    padding-top: 6px;
+    margin-top: 4px;
+    padding-top: 4px;
     border-top: 1px solid var(--rule);
   }
   ul.voice-list li.voice-item .article-stack > .latest.older .latest-title {
@@ -547,15 +547,10 @@
     50%  { box-shadow: 0 0 0 5px rgba(155, 28, 44, 0.10); }
     100% { box-shadow: 0 0 0 1px rgba(155, 28, 44, 0.18); }
   }
+  /* Status line is purely informational ("Live · updated 3h ago") — dock it into the masthead area
+     and shrink it so it never claims its own row. Empty status = hidden entirely. */
   .feed-status {
-    text-align: right;
-    font-family: "Helvetica Neue", sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 0 0 2px;
-    min-height: 0;
+    display: none;
   }
   .feed-status.live {
     color: var(--oxblood);
