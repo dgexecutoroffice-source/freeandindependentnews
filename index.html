@@ -197,19 +197,172 @@
      v.feature voice). Lives outside the multi-column list so it can span the page edge-to-edge
      without breaking the masonry below. */
   .featured-strip {
-    margin: 4px 0 14px;
+    margin: 6px 0 18px;
   }
   .featured-strip:empty { display: none; }
+  .featured-strip ul { list-style: none; padding: 0; margin: 0; }
+
+  /* ===== The daily dossier — flagship treatment for The Underground / The Wire ===== */
   .featured-strip .voice-item.feature {
-    background: var(--accent-soft);
-    border: 1px solid var(--oxblood);
-    border-left: 4px solid var(--oxblood);
-    padding: 9px 14px 8px;
     margin: 0;
     list-style: none;
     display: block;
     position: relative;
     min-width: 0;
+    background: #fbf9f3;
+    border: 1px solid #2a2620;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 6px 22px -14px rgba(26,22,17,0.55);
+  }
+  /* Dark masthead band */
+  .featured-strip .brief-masthead {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 18px;
+    background: linear-gradient(180deg, #1d1a16 0%, #14110d 100%);
+    border-bottom: 2px solid var(--gold);
+  }
+  .featured-strip .brief-seal {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--gold);
+    border-radius: 50%;
+    color: var(--gold);
+    font-family: "Bookman Old Style", Georgia, serif;
+    font-weight: 900;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    background: rgba(200,155,60,0.06);
+  }
+  .featured-strip .brief-headings { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .featured-strip .brief-kicker {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .featured-strip .brief-name {
+    margin: 0;
+    font-family: "Bookman Old Style", Georgia, serif;
+    font-weight: 900;
+    font-size: 23px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: #faf8f2;
+  }
+  .featured-strip .brief-when {
+    margin-left: auto;
+    flex-shrink: 0;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
+    align-self: flex-start;
+    padding-top: 3px;
+  }
+  .featured-strip .brief-when.fresh::before {
+    content: "●";
+    color: var(--oxblood);
+    margin-right: 5px;
+    animation: livePulse 1.6s ease-in-out infinite;
+  }
+  /* Body */
+  .featured-strip .brief-body { padding: 14px 18px 12px; }
+  .featured-strip .article-stack { margin: 0; padding: 0; }
+  .featured-strip .latest { margin: 0; padding: 0; background: transparent; border: none;
+    font-family: Georgia, serif; color: var(--ink); }
+  .featured-strip .latest.loading, .featured-strip .latest.errored {
+    color: var(--muted); font-style: italic; font-size: 13px;
+  }
+  .featured-strip .latest-label {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--oxblood);
+    padding-bottom: 7px; margin-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .featured-strip .latest-label .when { color: var(--muted); font-weight: 600; }
+  .featured-strip .latest-title {
+    display: block;
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700; font-size: 20px; line-height: 1.2; color: var(--ink);
+    text-decoration: none; margin: 0 0 10px;
+    overflow-wrap: break-word;
+  }
+  .featured-strip .latest-title:hover {
+    color: var(--oxblood); text-decoration: underline;
+    text-decoration-thickness: 1.5px; text-underline-offset: 2px;
+  }
+  /* Report bullets — BLUF lead + region grid */
+  .featured-strip .report-bullets { list-style: none; padding: 0; margin: 0; display: grid; gap: 7px; }
+  .featured-strip .report-bullets li {
+    font-family: Georgia, serif; font-size: 13px; line-height: 1.5; color: #2a2620;
+    padding-left: 16px; position: relative;
+  }
+  .featured-strip .report-bullets li::before {
+    content: "▸"; position: absolute; left: 0; top: 0;
+    color: var(--oxblood); font-weight: 700; font-size: 11px; line-height: 1.7;
+  }
+  /* BLUF / lead — the first bullet reads as the headline takeaway */
+  .featured-strip .report-bullets li:first-child {
+    grid-column: 1 / -1;
+    font-size: 14.5px; line-height: 1.5; font-weight: 600; color: var(--ink);
+    background: rgba(200,155,60,0.10);
+    border-left: 3px solid var(--oxblood);
+    border-radius: 0 3px 3px 0;
+    padding: 9px 12px 9px 14px;
+    margin-bottom: 4px;
+  }
+  .featured-strip .report-bullets li:first-child::before {
+    content: "BLUF";
+    position: static;
+    display: inline-block;
+    margin-right: 8px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 8.5px; font-weight: 800; letter-spacing: 0.16em;
+    color: var(--oxblood); vertical-align: middle;
+    border: 1px solid rgba(155,28,44,0.4); border-radius: 2px;
+    padding: 1px 4px;
+    line-height: 1;
+  }
+  /* On wide screens, region bullets flow into two tidy columns */
+  @media (min-width: 760px) {
+    .featured-strip .report-bullets { grid-template-columns: 1fr 1fr; column-gap: 26px; }
+  }
+  /* Share row inside the dossier (the ul.voice-list share styles don't reach here) */
+  .featured-strip .share-row { display: flex; align-items: center; gap: 6px; margin: 12px 0 0;
+    padding-top: 10px; border-top: 1px solid var(--rule); }
+  .featured-strip .share-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border: 1px solid var(--rule); background: transparent;
+    color: var(--muted); border-radius: 3px; cursor: pointer; padding: 0; text-decoration: none;
+    transition: color 0.12s, border-color 0.12s, background 0.12s;
+  }
+  .featured-strip .share-btn:hover { color: var(--oxblood); border-color: var(--oxblood); background: rgba(155,28,44,0.06); }
+  .featured-strip .share-toast {
+    font-family: "Helvetica Neue", Arial, sans-serif; font-size: 9.5px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--oxblood); font-weight: 700; margin-left: 4px;
+  }
+  .featured-strip .breaking-tag {
+    background: var(--oxblood); color: #fff; padding: 1px 6px; border-radius: 2px;
+    font-size: 8.5px; letter-spacing: 0.12em; margin-right: 6px;
+  }
+  @media (max-width: 600px) {
+    .featured-strip .brief-seal { width: 34px; height: 34px; font-size: 13px; }
+    .featured-strip .brief-name { font-size: 20px; }
+    .featured-strip .latest-title { font-size: 18px; }
   }
   /* Multi-column layout — cards flow vertically inside columns instead of equal-height rows,
      so a short card no longer stretches to match its tallest neighbor. */
@@ -922,13 +1075,26 @@
           <div class="x-link-cta">Open <strong>@${handle}</strong> on X &rarr;</div>
         </a>`;
       }
-      const cls = 'voice-item' + (v.feature ? ' feature' : '');
-      const altLine = v.alt ? `<div class="alt-handle">On X · @${v.alt.replace(/\s+/g,'')}</div>` : '';
-      const oneLine = v.feature ? `<p class="one">${v.o}</p>` : '';
+      // Featured voice (The Underground) gets the "daily dossier" masthead treatment.
+      if (v.feature) {
+        const seal = (v.alt ? v.alt.trim().split(/\s+/)[0] : v.n.replace(/^The\s+/i, '').slice(0, 2))
+          .toUpperCase().slice(0, 3);
+        const kicker = escapeHTML(v.c || 'Daily Brief');
+        return `<li class="voice-item feature" data-voice-key="${encodeURIComponent(v.n)}" data-pub="">
+          <div class="brief-masthead">
+            <span class="brief-seal">${escapeHTML(seal)}</span>
+            <div class="brief-headings">
+              <span class="brief-kicker">${kicker}</span>
+              <h3 class="brief-name">${escapeHTML(v.n)}</h3>
+            </div>
+            <span class="when-badge brief-when"></span>
+          </div>
+          <div class="brief-body">${slot}</div>
+        </li>`;
+      }
+      const cls = 'voice-item';
       return `<li class="${cls}" data-voice-key="${encodeURIComponent(v.n)}" data-pub="">
         <h3 class="name">${v.n}<span class="when-badge"></span></h3>
-        ${altLine}
-        ${oneLine}
         ${slot}
       </li>`;
     }
