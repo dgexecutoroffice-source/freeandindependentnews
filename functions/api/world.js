@@ -9,19 +9,20 @@
  */
 
 const EAST = [
+  ["RT",              "https://www.rt.com/rss/news/"],
   ["Al Jazeera",      "https://www.aljazeera.com/xml/rss/all.xml"],
+  ["Asia Times",      "https://asiatimes.com/feed/"],
   ["TASS",            "https://tass.com/rss/v2.xml"],
-  ["Press TV",        "https://www.presstv.ir/rss.xml"],
   ["Middle East Eye", "https://www.middleeasteye.net/rss"],
-  ["Global Times",    "https://www.globaltimes.cn/rss/outbrain.xml"]
+  ["Press TV",        "https://www.presstv.ir/rss.xml"]
 ];
 const WEST = [
-  ["BBC World",    "https://feeds.bbci.co.uk/news/world/rss.xml"],
-  ["The Guardian", "https://www.theguardian.com/world/rss"],
-  ["France 24",    "https://www.france24.com/en/rss"],
-  ["DW",           "https://rss.dw.com/rdf/rss-en-all"]
+  ["ZeroHedge",      "https://feeds.feedburner.com/zerohedge/feed"],
+  ["MintPress News", "https://www.mintpressnews.com/feed/"],
+  ["France 24",      "https://www.france24.com/en/rss"],
+  ["DW",             "https://rss.dw.com/rdf/rss-en-all"]
 ];
-const CACHE_KEY = "world:v2";
+const CACHE_KEY = "world:v3";
 const CACHE_MIN = 15;
 const PER_FEED = 7;   // newest items to take from each feed
 const PER_SIDE = 18;  // cap per rail after merge
