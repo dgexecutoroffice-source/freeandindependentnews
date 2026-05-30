@@ -21,10 +21,10 @@ const WEST = [
   ["France 24",    "https://www.france24.com/en/rss"],
   ["DW",           "https://rss.dw.com/rdf/rss-en-all"]
 ];
-const CACHE_KEY = "world:v1";
+const CACHE_KEY = "world:v2";
 const CACHE_MIN = 15;
-const PER_FEED = 4;   // newest items to take from each feed
-const PER_SIDE = 8;   // cap per rail after merge
+const PER_FEED = 7;   // newest items to take from each feed
+const PER_SIDE = 18;  // cap per rail after merge
 const UA = "FreeAndIndependentNewsAgent/1.0 (+https://freeandindependentnews.com)";
 
 function stripCDATA(s){ return (s||"").replace(/^<!\[CDATA\[/, "").replace(/\]\]>$/, "").trim(); }
