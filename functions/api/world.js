@@ -9,20 +9,21 @@
  */
 
 const EAST = [
-  ["RT",              "https://www.rt.com/rss/news/"],
-  ["Al Jazeera",      "https://www.aljazeera.com/xml/rss/all.xml"],
-  ["Asia Times",      "https://asiatimes.com/feed/"],
-  ["TASS",            "https://tass.com/rss/v2.xml"],
-  ["Middle East Eye", "https://www.middleeasteye.net/rss"],
-  ["Press TV",        "https://www.presstv.ir/rss.xml"]
+  ["RT",                       "https://www.rt.com/rss/news/"],
+  ["Al Jazeera",               "https://www.aljazeera.com/xml/rss/all.xml"],
+  ["South China Morning Post", "https://www.scmp.com/rss/91/feed"],
+  ["The Hindu",                "https://www.thehindu.com/news/international/feeder/default.rss"],
+  ["TASS",                     "https://tass.com/rss/v2.xml"],
+  ["Middle East Eye",          "https://www.middleeasteye.net/rss"]
 ];
 const WEST = [
-  ["ZeroHedge",      "https://feeds.feedburner.com/zerohedge/feed"],
-  ["MintPress News", "https://www.mintpressnews.com/feed/"],
-  ["France 24",      "https://www.france24.com/en/rss"],
-  ["DW",             "https://rss.dw.com/rdf/rss-en-all"]
+  ["ZeroHedge",     "https://feeds.feedburner.com/zerohedge/feed"],
+  ["The Intercept", "https://theintercept.com/feed/?rss"],
+  ["ScheerPost",    "https://scheerpost.com/feed/"],
+  ["France 24",     "https://www.france24.com/en/rss"],
+  ["DW",            "https://rss.dw.com/rdf/rss-en-all"]
 ];
-const CACHE_KEY = "world:v3";
+const CACHE_KEY = "world:v4";
 const CACHE_MIN = 15;
 const PER_FEED = 7;   // newest items to take from each feed
 const PER_SIDE = 18;  // cap per rail after merge
