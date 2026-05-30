@@ -1171,7 +1171,8 @@
       const bluf = t.match(/BLUF:\s*([\s\S]*?)\/\//i);
       if (!bluf) return null;
       const blufLine = bluf[1].replace(/\s+/g, ' ').trim().replace(/[.\s]+$/,'');
-      if (blufLine) out.push('BLUF — ' + blufLine);
+      // The "BLUF" label is rendered as a styled tag in the dossier, so keep the text clean.
+      if (blufLine) out.push(blufLine.replace(/^BLUF\s*[—–:-]\s*/i, ''));
 
       // Drop everything before the first region paragraph (kill the headers).
       const tearOff = t.indexOf('-----BEGIN TEARLINE-----');
@@ -1188,7 +1189,18 @@
         const m = p.match(regionLine);
         if (m) {
           const region = m[1].trim();
+          // Skip non-region housekeeping lines (sources, analyst sign-off, notes).
+          if (/^(Analyst|Sources?|Source|Notes?|Research|Reference|Links?)$/i.test(region)) continue;
           let body = m[2].trim();
+          // Strip trailing boilerplate: URLs, disclaimers, END REPORT/TEARLINE markers.
+          body = body
+            .replace(/\s*https?:\/\/\S+.*$/i, '')
+            .replace(/\s*\/\/\s*END\s+REPORT\s*\/\/.*$/i, '')
+            .replace(/\s*-+\s*END\s+TEARLINE\s*-+.*$/i, '')
+            .replace(/\s*Disclaimer:.*$/i, '')
+            .trim();
+          // If what's left is empty or still boilerplate, drop the bullet.
+          if (!body || /https?:\/\/|END REPORT|Disclaimer|No LLMs/i.test(body)) continue;
           // Cut at the first sentence-ish boundary so each bullet stays scannable.
           const sentEnd = body.search(/(?<=[.!?])\s+(?=[A-Z(])/);
           if (sentEnd > 30 && sentEnd < 260) body = body.slice(0, sentEnd).trim();
