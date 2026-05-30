@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Desk Stats · Free and Independent News</title>
+<style>
+  :root{
+    --bg:#faf8f2; --ink:#1a1a1a; --muted:#6b6152; --rule:#d8d2c4;
+    --oxblood:#9b1c2c; --green:#1f3d2b; --gold:#c89b3c; --soft:#f1ece0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,serif;
+       -webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:920px;margin:0 auto;padding:30px 22px 80px}
+  .masthead{border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:6px}
+  .masthead h1{font-family:"Bookman Old Style",Georgia,serif;font-weight:900;font-size:26px;margin:0;letter-spacing:-.01em}
+  .masthead h1 .a{color:var(--oxblood)} .masthead h1 .b{color:var(--green)}
+  .sub{font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;letter-spacing:.16em;
+       text-transform:uppercase;color:var(--muted);margin:6px 0 0}
+  h2{font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;letter-spacing:.18em;
+     text-transform:uppercase;color:var(--oxblood);font-weight:800;margin:34px 0 12px;
+     border-bottom:1px solid var(--rule);padding-bottom:6px}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:640px){.cards{grid-template-columns:repeat(2,1fr)}}
+  .card{background:var(--soft);border:1px solid var(--rule);border-left:3px solid var(--oxblood);
+        padding:12px 14px;border-radius:3px}
+  .card .k{font-family:"Helvetica Neue",Arial,sans-serif;font-size:10px;letter-spacing:.12em;
+           text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 6px}
+  .card .v{font-family:"Bookman Old Style",Georgia,serif;font-weight:900;font-size:30px;line-height:1;color:var(--ink)}
+  .card .v small{font-size:13px;font-weight:400;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--rule)}
+  th{font-family:"Helvetica Neue",Arial,sans-serif;font-size:10px;letter-spacing:.1em;
+     text-transform:uppercase;color:var(--muted)}
+  td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+  .bar{height:9px;background:var(--oxblood);border-radius:2px;min-width:2px}
+  .spark{display:flex;align-items:flex-end;gap:3px;height:64px;margin-top:6px}
+  .spark .s{flex:1;background:var(--green);border-radius:2px 2px 0 0;min-height:2px;opacity:.85}
+  .spark .s.today{background:var(--oxblood)}
+  .muted{color:var(--muted)} .small{font-size:12px}
+  .note{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:8px}
+  .empty{background:var(--soft);border:1px dashed var(--rule);padding:18px;border-radius:4px;
+         font-size:14px;color:var(--muted)}
+  a{color:var(--oxblood)}
+  .foot{margin-top:40px;font-size:11px;color:var(--muted);font-family:"Helvetica Neue",Arial,sans-serif;
+        letter-spacing:.08em;text-transform:uppercase}
+  .stamp{font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <h1><span class="a">Free</span> &amp; <span class="b">Independent</span> · Desk Stats</h1>
+  </div>
+  <p class="sub">First-party · no cookies · no third-party trackers</p>
+
+  <div id="content"><p class="muted" style="margin-top:30px">Loading the numbers…</p></div>
+
+  <div class="foot">freeandindependentnews.com · <a href="/">← back to the desk</a></div>
+</div>
+
+<script>
+const fmt = n => (n||0).toLocaleString();
+function rel(iso){ if(!iso) return "—"; const d=new Date(iso); const h=(Date.now()-d)/36e5;
+  if(h<1) return Math.max(1,Math.round(h*60))+"m ago"; if(h<24) return Math.round(h)+"h ago";
+  return Math.round(h/24)+"d ago"; }
+
+fetch('/api/stats',{cache:'no-store'})
+  .then(r=>r.json())
+  .then(render)
+  .catch(()=>{ document.getElementById('content').innerHTML =
+    '<div class="empty">Stats endpoint isn’t responding yet. If you just deployed, give it a minute and refresh — the KV binding may still be propagating.</div>'; });
+
+function render(d){
+  const t=d.traffic||{}, a=d.articles||{};
+  const today=t.today||{views:0,visits:0}, l7=t.last7||{views:0,visits:0};
+  const series=t.series||[];
+  let html="";
+
+  // Traffic
+  html+='<h2>Traffic</h2>';
+  if(!t.hasData){
+    html+='<div class="empty"><b>No traffic recorded yet.</b><br>The counter is live, but no pageviews have landed in the current window. '+
+          'As soon as people start visiting (share a link on X or Telegram to test), the numbers below will fill in. '+
+          'Every visit to the homepage now pings this counter automatically.</div>';
+  }
+  html+='<div class="cards" style="margin-top:12px">'+
+    card('Views today',fmt(today.views))+
+    card('Visits today',fmt(today.visits))+
+    card('Views · 7d',fmt(l7.views))+
+    card('Visits · 7d',fmt(l7.visits))+
+  '</div>';
+
+  // Sparkline (14d views)
+  if(series.length){
+    const max=Math.max(1,...series.map(s=>s.views));
+    html+='<div class="spark">'+series.map(s=>{
+      const h=Math.round((s.views/max)*60); const today=s.day===series[series.length-1].day;
+      return '<div class="s'+(today?' today':'')+'" style="height:'+Math.max(2,h)+'px" title="'+s.day+': '+s.views+' views"></div>';
+    }).join('')+'</div><p class="small muted">Daily views, last 14 days (newest = oxblood)</p>';
+  }
+
+  // Referrers
+  html+='<h2>Where reach comes from · 7d</h2>';
+  const refs=t.referrers||[];
+  if(!refs.length){ html+='<div class="empty">No referrer data yet.</div>'; }
+  else{
+    const max=Math.max(...refs.map(r=>r.views));
+    html+='<table><thead><tr><th>Source</th><th>Views</th><th style="width:45%"></th></tr></thead><tbody>';
+    refs.forEach(r=>{ html+='<tr><td>'+esc(r.source)+'</td><td class="n">'+fmt(r.views)+
+      '</td><td><div class="bar" style="width:'+Math.round((r.views/max)*100)+'%"></div></td></tr>'; });
+    html+='</tbody></table>';
+  }
+
+  // Articles
+  html+='<h2>News throughput</h2>';
+  html+='<div class="cards">'+
+    card('Articles · 24h',fmt(a.last24))+
+    card('Articles · 7d',fmt(a.last7))+
+    card('Avg / day',(a.perDayAvg7!=null?a.perDayAvg7:'—'))+
+    card('Voices reporting',(a.voicesReporting!=null?a.voicesReporting+'<small>/'+a.voicesTotal+'</small>':'—'))+
+  '</div>';
+  if(a.perVoice&&a.perVoice.length){
+    html+='<table style="margin-top:14px"><thead><tr><th>Voice</th><th>24h</th><th>7d</th><th>Newest</th></tr></thead><tbody>';
+    a.perVoice.slice().sort((x,y)=>(y.last7||0)-(x.last7||0)).forEach(v=>{
+      html+='<tr><td>'+esc(v.name)+(v.error?' <span class="muted small">(feed error)</span>':'')+
+        '</td><td class="n">'+(v.last24!=null?v.last24:'—')+'</td><td class="n">'+(v.last7!=null?v.last7:'—')+
+        '</td><td class="muted small">'+rel(v.newest)+'</td></tr>';
+    });
+    html+='</tbody></table>';
+    html+='<p class="note">Counts the desk’s 9 RSS voices. The Irish Patriot &amp; Tiffany Cianci post on X (no feed), so they’re not counted here.</p>';
+  }
+
+  html+='<p class="stamp" style="margin-top:18px">Generated '+rel(d.generatedAt)+
+    (a.computedAt?' · articles computed '+rel(a.computedAt):'')+'</p>';
+
+  document.getElementById('content').innerHTML=html;
+}
+function card(k,v){ return '<div class="card"><p class="k">'+k+'</p><div class="v">'+v+'</div></div>'; }
+function esc(s){ return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+</script>
+</body>
+</html>

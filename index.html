@@ -829,7 +829,7 @@
 
   <footer class="site">
     <p>We don't sell ads, we don't sell data, and we don't choose which voices are on your desk. <b>Your desk, not an algorithm.</b></p>
-    <p class="copyright">© 2026 Free and Independent News · freeandindependentnews.com · <a href="#reserve">Reserve the Brief</a></p>
+    <p class="copyright">© 2026 Free and Independent News · freeandindependentnews.com · <a href="#reserve">Reserve the Brief</a> · <a href="/stats.html">Desk Stats</a></p>
   </footer>
 
 </div>
@@ -1546,6 +1546,40 @@
       });
     return false;
   }
+
+  // ============================================================
+  // First-party, privacy-respecting pageview beacon.
+  // No cookies, no IP storage, no fingerprinting — just a counter
+  // handled by /api/hit (our own Cloudflare Function). Skips local dev.
+  // ============================================================
+  (function pageBeacon() {
+    try {
+      var host = location.hostname;
+      if (host === 'localhost' || host === '127.0.0.1' || host === '') return;
+
+      // First hit of this browser session counts as a "visit".
+      var firstOfSession = false;
+      try {
+        if (!sessionStorage.getItem('fani_seen')) {
+          sessionStorage.setItem('fani_seen', '1');
+          firstOfSession = true;
+        }
+      } catch (_) { firstOfSession = true; }
+
+      // Coarse referrer source hint (the Function also reads the Referer header).
+      var src = 'direct';
+      try {
+        if (document.referrer) {
+          var rh = new URL(document.referrer).hostname.toLowerCase();
+          if (!rh.includes('freeandindependentnews')) src = rh;
+        }
+      } catch (_) {}
+
+      var url = '/api/hit?v=' + (firstOfSession ? '1' : '0') + '&r=' + encodeURIComponent(src);
+      if (navigator.sendBeacon) navigator.sendBeacon(url);
+      else fetch(url, { method: 'POST', keepalive: true, cache: 'no-store' }).catch(function () {});
+    } catch (_) { /* a counter must never break the page */ }
+  })();
 </script>
 </body>
 </html>

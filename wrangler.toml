@@ -1,0 +1,10 @@
+# Cloudflare Pages config — declares the KV binding so the analytics Functions
+# (functions/api/hit.js, functions/api/stats.js) can persist counters at the edge.
+# The "feeds" namespace was created earlier; we reuse it for analytics keys too.
+name = "free-and-independent-news"
+pages_build_output_dir = "."
+compatibility_date = "2024-09-23"
+
+[[kv_namespaces]]
+binding = "FEEDS"
+id = "94304e522c294fe0a2c3d24dc6b6d9f5"
