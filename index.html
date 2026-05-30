@@ -1070,7 +1070,7 @@
   // Feed agent — Cloudflare Worker that runs every 10 minutes and serves
   // the consolidated latest-article JSON. Set after the Worker is deployed.
   // Use empty string to fall back to per-voice rss2json (legacy path).
-  const FEED_AGENT_URL = 'https://feed-agent.dgexecutoroffice.workers.dev/api/latest';
+  const FEED_AGENT_URL = '';  // old standalone Worker returned 503; use the direct RSS path instead
 
   // Voice roster — must mirror desk.html VOICES list. First-time visitors see
   // all ten voices on their desk; returning visitors see whatever they saved.
